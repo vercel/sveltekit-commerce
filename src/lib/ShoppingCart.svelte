@@ -2,16 +2,18 @@
     import { cart } from '../store'; 
     import { api } from "../routes/_shopifyApi.js";
     import Icons from './Icons.svelte';
+    import { createEventDispatcher } from 'svelte';
+	const dispatch = createEventDispatcher();
 
     let items = [];
     if(typeof window !== 'undefined') {
         items = JSON.parse(localStorage.getItem('cart')) || [];
     };
-    function removeOneItem(item, i) {
+    function addOneItem(item, i) {
         items[i] = {...items[i], ['quantity']: item.quantity+1};
         updateLocalStorage();
     };
-    function addOneItem(item, i) {
+    function removeOneItem(item, i) {
         if(item.quantity <= 1) {
             removeEntireItem(item, i)
         } else {
@@ -35,21 +37,10 @@
                 quantity: d.quantity,
                 merchandiseId: d.variantId
             }
-        })
-        const getCheckoutUrl = await api({
-            query: `
-                mutation calculateCart($lineItems: [CartLineInput!]) {
-                    cartCreate(input: { lines: $lineItems }) {
-                        cart {
-                            checkoutUrl
-                        }
-                    }
-                }
-            `,
-            variables: { lineItems }
-        })
-
-        window.open(getCheckoutUrl.body.data.cartCreate.cart.checkoutUrl, "_blank");
+        });
+        dispatch('getCheckoutUrl', {
+			body: lineItems
+		});
     }
 </script>
 <div on:click|self class="max-h-screen overflow-hidden flex justify-end w-full absolute inset-0 bg-black/50 z-50">
@@ -88,10 +79,10 @@
                     <div class="px-2 h-full flex items-center ">
                         {item.quantity}
                     </div>
-                    <button on:click={() => {addOneItem(item, i)}} class="ml-auto h-8 w-8 flex items-center justify-center border-l border-white/40 bg-white/0 hover:bg-white/10">
+                    <button on:click={() => {removeOneItem(item, i)}} class="ml-auto h-8 w-8 flex items-center justify-center border-l border-white/40 bg-white/0 hover:bg-white/10">
                         <Icons type="minus" strokeColor="#fff" />
                     </button>
-                    <button on:click={() => {removeOneItem(item, i)}} class="h-8 w-8 flex items-center justify-center border-l border-white/40 bg-white/0 hover:bg-white/10">
+                    <button on:click={() => {addOneItem(item, i)}} class="h-8 w-8 flex items-center justify-center border-l border-white/40 bg-white/0 hover:bg-white/10">
                         <Icons type="plus" strokeColor="#fff" />
                     </button>
                 </div>

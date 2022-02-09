@@ -14,8 +14,8 @@
         let amount = 0;
         $cart.forEach((d) => {
             amount  = amount+d.quantity
-        })
-        numberOfItemsInBasket = amount
+        });
+        numberOfItemsInBasket = amount;
     }
 
     let tabs = [
