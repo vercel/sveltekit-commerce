@@ -31,7 +31,7 @@
         cartItems =  JSON.parse(localStorage.getItem('cart')) || []
     }
 
-    product.options.forEach((option) => {
+    product?.options.forEach((option) => {
         selectedOptions = {...selectedOptions, [option.name]: option.values[0]}
     })
 

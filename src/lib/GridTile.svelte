@@ -1,11 +1,11 @@
 <script>
     import Icons from "$lib/Icons.svelte";
 
-    export let title;
+    export let title = '';
     export let removeLabels = false;
     export let imageSrc;
-    export let price;
-    export let currencyCode;
+    export let price = '';
+    export let currencyCode = '';
     let hover = false;
 </script>
 
