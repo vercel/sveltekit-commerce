@@ -15,3 +15,9 @@
 <form on:submit|preventDefault={submit} class="w-1/2 flex items-center">
     <input bind:value placeholder="Search..." class="w-full p-1 bg-black border border-white/30" />
 </form>
+
+<style>
+    form{
+        margin:0px; padding:0px; display:inline;
+    }
+</style>
