@@ -2,6 +2,7 @@
     import { page } from '$app/stores';
     import Icons from "$lib/Icons.svelte";
     import { cart } from '../store'; 
+    import SearchBar from "$lib/SearchBar.svelte";
 
     if(typeof window !== 'undefined') {
         let items = JSON.parse(localStorage.getItem('cart'))
@@ -16,11 +17,11 @@
             amount  = amount+d.quantity
         });
         numberOfItemsInBasket = amount;
-    }
+    };
 
     let tabs = [
         {name: 'Shop All', path: '/search'},
-    ]
+    ];
 </script>
 
 <nav class="p-4 lg:px-6 border-b border-zinc-700 flex items-center justify-between">
@@ -39,6 +40,7 @@
             </div>
         {/each}
     </div>
+    <SearchBar />
     <button on:click class="relative">
         <Icons strokeColor="#fff" type="cart" />
         <div class="text-black text-xs absolute bottom-0 left-0 h-4 w-4 rounded-full -ml-2 -mb-2 border border-black flex items-center justify-center bg-white">

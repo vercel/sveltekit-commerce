@@ -1,4 +1,4 @@
-import { api } from "../_shopifyApi.js";
+import { api } from '../_shopifyApi.js';
 
 export const get = async () => {
   const response = await api({
@@ -73,5 +73,5 @@ export const get = async () => {
       }
     }`
   });
-    return response
+  return response;
 };

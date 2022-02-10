@@ -1,8 +1,8 @@
-import { api } from "../_shopifyApi.js";
+import { api } from '../_shopifyApi.js';
 
 export const get = async ({ params }) => {
   const response = await api({
-          query: ` 
+    query: ` 
             query getProduct($handle: String!) {
               productByHandle(handle: $handle) {
                 id
@@ -70,10 +70,10 @@ export const get = async ({ params }) => {
               }
             }
           `,
-          variables: {
-            handle: params.handle,
-          },
-        });
+    variables: {
+      handle: params.handle
+    }
+  });
 
-        return response
-  };
+  return response;
+};

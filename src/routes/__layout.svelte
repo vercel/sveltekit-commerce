@@ -3,7 +3,7 @@
     import Header from '$lib/Header.svelte';
     import Footer from '$lib/Footer.svelte';
     import ShoppingCart from '$lib/ShoppingCart.svelte';
-
+    
     let showCart = false;
     function hideCart() {
         showCart = false

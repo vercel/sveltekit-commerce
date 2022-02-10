@@ -21,12 +21,23 @@
 <script>
     import GridTile from '$lib/GridTile.svelte';
     export let allProducts;
+    import { search } from '../../store.js'
+
+    $: searchedItems = allProducts.edges.filter((item) => {
+        if(item.node.title.toLowerCase().includes($search.toLowerCase())) {
+            return item
+        }
+    });
+    let displayedProducts = allProducts.edges;
+    $: if(searchedItems.length > 0) {
+        displayedProducts = searchedItems
+    }
 
 </script>
 
 <div>
     <ul class="grid gap-4 grid-flow-row sm:grid-cols-2 md:grid-cols-3">
-        {#each allProducts.edges as product, i (product.node.id)}
+        {#each displayedProducts as product, i (product.node.id)}
             <li>
                 <div class="group block relative aspect-square overflow-hidden bg-zinc-800">
                     <a sveltekit:prefetch href={`/product/${product.node.handle}`}>
