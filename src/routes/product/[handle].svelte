@@ -20,7 +20,7 @@
 
 <script>
     import GridTile from '$lib/GridTile.svelte';
-    import { cart } from '../../store.js';
+    import { api } from '../_shopifyApi.js';
     export let product;
 
     let highlightedImageSrc = product?.images?.edges[0]?.node?.originalSrc;
@@ -36,32 +36,66 @@
     })
 
     async function addToCart() {
+        let cartId;
         let variantId;
-        let variants;
+        // let variants;
         product.variants.edges.forEach((variant) => {
             let result = variant.node.selectedOptions.every((option) => {
                 return selectedOptions[option.name] === option.value
             });
             if(result) {
                 variantId = variant.node.id;
-                variants = variant.node.title;
+                // variants = variant.node.title;
             }
-        })
-
-        let newItem = {
-            variantId: variantId,
-            variants: variants,
-            name: product.title,
-            image: product?.images?.edges[0]?.node?.originalSrc,
-            price: product?.priceRange?.maxVariantPrice?.amount,
-            quantity: 1
-        };
-        cartItems = [...cartItems, newItem]
-
+        });
+        let lineItems = {quantity: 1, merchandiseId: variantId};
         if(typeof window !== 'undefined') {
-            localStorage.setItem('cart', JSON.stringify(cartItems));
-            cart.set(cartItems);
+            cartId = localStorage.getItem('cartId');
+        };
+        if(cartId) {
+            // const res =  await fetch('/getCheckoutUrl.json', {
+            //     method: 'POST',
+            //     body: JSON.stringify({data: lineItems})
+            // });
+            // const cartData1 = await res.json();
+            
+            // if(typeof window !== 'undefined') {
+            //     localStorage.setItem('cartId', JSON.stringify(cartData1?.data?.cartCreate?.cart?.id));
+            //     localStorage.setItem('cartCheckoutUrl', JSON.stringify(cartData1?.data?.cartCreate?.cart?.checkoutUrl));
+            // };
+            
+            await fetch('/product/addToCart.json', {
+                method: 'POST',
+                body: JSON.stringify({ cartId: cartId, variantId: variantId })
+            });
+        } else {
+            const res =  await fetch('/getCheckoutUrl.json', {
+                method: 'POST',
+                body: JSON.stringify({data: lineItems})
+            });
+            const cartData = await res.json();
+            
+            if(typeof window !== 'undefined') {
+                localStorage.setItem('cartId', JSON.stringify(cartData?.data?.cartCreate?.cart?.id));
+                localStorage.setItem('cartCheckoutUrl', JSON.stringify(cartData?.data?.cartCreate?.cart?.checkoutUrl));
+            }
         }
+
+        // let newItem = {
+        //     variantId: variantId,
+        //     variants: variants,
+        //     name: product.title,
+        //     image: product?.images?.edges[0]?.node?.originalSrc,
+        //     price: product?.priceRange?.maxVariantPrice?.amount,
+        //     quantity: 1
+        // };
+        // cartItems = [...cartItems, newItem]
+
+        // if(typeof window !== 'undefined') {
+        //     localStorage.setItem('cart', JSON.stringify(cartItems));
+        //     cart.set(cartItems);
+        // }
+
     };
 </script>
 

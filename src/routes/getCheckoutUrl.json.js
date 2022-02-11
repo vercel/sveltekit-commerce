@@ -9,6 +9,7 @@ export const post = async ({ request }) => {
               cartCreate(input: { lines: $lineItems }) {
                   cart {
                       checkoutUrl
+                      id
                   }
               }
           }
