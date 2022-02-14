@@ -5,6 +5,7 @@
     import ShoppingCart from '$lib/ShoppingCart.svelte';
     
     let showCart = false;
+    let loading = false;
     function hideCart() {
         showCart = false
     };
@@ -17,15 +18,16 @@
         });
         const checkoutUrl = await res.json();
         window.open(checkoutUrl.data.cartCreate.cart.checkoutUrl , "_blank");
+        loading = false;
     };
 
 </script>
 
 <main class={`${showCart ? 'h-screen' : 'min-h-screen'} text-white overflow-hidden`}>
     {#if showCart}
-        <ShoppingCart on:click={hideCart} on:getCheckoutUrl={getCheckoutUrl} />
+        <ShoppingCart on:click={hideCart} on:getCheckoutUrl={getCheckoutUrl} bind:loading={loading} />
     {/if}
-    <Header on:click={() => {showCart = !showCart}}/>
+    <Header on:openCart={() => {showCart = !showCart}}/>
     <div class="min-h-screen overflow-scroll">
         <slot></slot>
         <Footer />

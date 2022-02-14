@@ -5,6 +5,7 @@
     import { createEventDispatcher } from 'svelte';
 	const dispatch = createEventDispatcher();
 
+    export let loading = false;
     let items = [];
     if(typeof window !== 'undefined') {
         items = JSON.parse(localStorage.getItem('cart')) || [];
@@ -32,6 +33,7 @@
         }
     };
     async function checkout() {
+        loading = true;
         let lineItems = items.map((d) => {
             return {
                 quantity: d.quantity,
@@ -43,7 +45,7 @@
 		});
     }
 </script>
-<div on:click|self class="max-h-screen overflow-hidden flex justify-end w-full absolute inset-0 bg-black/50 z-50">
+<div on:click|self class="z-50 max-h-screen overflow-hidden flex justify-end w-full absolute inset-0 bg-black/50 z-50">
     <div class="lg:w-1/3 md:w-1/2 w-full bg-black z-50 p-6">
         <div class="mb-6 w-full flex items-center justify-between">
             <div class="text-2xl font-medium">My Cart</div>
@@ -67,7 +69,7 @@
                             <p class="font-medium text-lg">{item.name}</p>
                             <p class="text-sm">{item.variants}</p>
                         </di>
-                        <p class="font-medium">${item.price}</p>
+                        <p class="font-medium">${item.price*item.quantity}</p>
                     </div>
                 </div>
             </div>
@@ -90,7 +92,50 @@
         {/each}
         </div>
         {#if items.length !== 0}
-            <button on:click={checkout} class="uppercase text-sm mt-6 font-medium opacity-90 hover:opacity-100 w-full text-black p-3 bg-white">Procede to Checkout</button>
+            <button on:click={checkout} class="flex items-center justify-center uppercase text-sm mt-6 font-medium opacity-90 hover:opacity-100 w-full text-black p-3 bg-white">
+                <span>Procede to Checkout</span>
+                {#if loading}
+                    <div class="ml-4 lds-ring"><div></div><div></div><div></div><div></div></div>
+                {/if}
+            </button>
         {/if}
     </div>
 </div>
+
+<style>
+    .lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    }
+    .lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #000 transparent transparent transparent;
+    }
+    .lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+    }
+    .lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+    }
+    .lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+    }
+    @keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    }
+</style>

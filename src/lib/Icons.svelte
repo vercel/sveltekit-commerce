@@ -26,6 +26,8 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 12H19" stroke={strokeColor} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       {:else if type === 'plus'}
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 5V19" stroke={strokeColor} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M5 12H19" stroke={strokeColor} stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      {:else if type === 'menu'}
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="#fff"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
       {/if}
       
 </div>
