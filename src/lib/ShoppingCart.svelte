@@ -6,32 +6,29 @@
 	const dispatch = createEventDispatcher();
 
     export let loading = false;
-    let items = [];
-    if(typeof window !== 'undefined') {
-        items = JSON.parse(localStorage.getItem('cart')) || [];
-    };
+    export let items = [];
+
     function addOneItem(item, i) {
-        items[i] = {...items[i], ['quantity']: item.quantity+1};
-        updateLocalStorage();
+        dispatch('addProduct', {
+			body: item.node.merchandise.id
+		});
     };
+
     function removeOneItem(item, i) {
-        if(item.quantity <= 1) {
-            removeEntireItem(item, i)
-        } else {
-            items[i] = {...items[i], ['quantity']: item.quantity-1};
-            updateLocalStorage();
-        }
+        let quantity = item.node.quantity - 1;
+        dispatch('removeProduct', {
+			body: {
+                variantId: item.node.merchandise.id,
+                quantity: quantity
+            }
+		});
     };
+
     function removeEntireItem(item, i) {
         items = [...items.slice(0, i), ...items.slice(i + 1)];
         updateLocalStorage();
     };
-    function updateLocalStorage() {
-        if(typeof window !== 'undefined') {
-            localStorage.setItem('cart', JSON.stringify(items))
-            cart.set(items);
-        }
-    };
+
     async function checkout() {
         loading = true;
         let lineItems = items.map((d) => {
@@ -62,14 +59,14 @@
         <div class="overflow-y-auto" style="height: 80%;">
             {#each items as item, i (i)}
             <div class="w-full flex mb-2">
-                <img class="bg-white flex-none w-20" src={item.image} />
+                <img class="bg-white flex-none w-20" src={item.node.merchandise.product.images.edges[0].node.originalSrc} />
                 <div class="flex flex-col justify-between ml-4 w-full">
                     <div class="w-full flex justify-between">
                         <di>
-                            <p class="font-medium text-lg">{item.name}</p>
-                            <p class="text-sm">{item.variants}</p>
+                            <p class="font-medium text-lg">{item.node.merchandise.product.title}</p>
+                            <p class="text-sm">{item.node.merchandise.title}</p>
                         </di>
-                        <p class="font-medium">${item.price*item.quantity}</p>
+                        <p class="font-medium">${item.node.estimatedCost.totalAmount.amount}</p>
                     </div>
                 </div>
             </div>
@@ -79,7 +76,7 @@
                 </button>
                 <div class="flex w-full h-8 border border-white/40">
                     <div class="px-2 h-full flex items-center ">
-                        {item.quantity}
+                        {item.node.quantity}
                     </div>
                     <button on:click={() => {removeOneItem(item, i)}} class="ml-auto h-8 w-8 flex items-center justify-center border-l border-white/40 bg-white/0 hover:bg-white/10">
                         <Icons type="minus" strokeColor="#fff" />

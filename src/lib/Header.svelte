@@ -1,26 +1,16 @@
 <script>
     import { page } from '$app/stores';
     import Icons from "$lib/Icons.svelte";
-    import { cart } from '../store'; 
+    import { cartQuantity } from '../store'; 
     import SearchBar from "$lib/SearchBar.svelte";
     import { createEventDispatcher } from 'svelte';
 
 	const dispatch = createEventDispatcher();
 
-    if(typeof window !== 'undefined') {
-        let items = JSON.parse(localStorage.getItem('cart'))
-        cart.set(items || [])
-    }
     $: currentRoute = $page.url.pathname;
+
     let numberOfItemsInBasket = 0;
     let showMenu = false;
-    $: {
-        let amount = 0;
-        $cart.forEach((d) => {
-            amount  = amount+d.quantity
-        });
-        numberOfItemsInBasket = amount;
-    };
 
     let tabs = [
         {name: 'All', path: '/search'},
@@ -58,7 +48,7 @@
         <button on:click={openCart} class="relative mr-4">
             <Icons strokeColor="#fff" type="cart" />
             <div class="text-black text-xs absolute bottom-0 left-0 h-4 w-4 rounded-full -ml-2 -mb-2 border border-black flex items-center justify-center bg-white">
-                {numberOfItemsInBasket}
+                {$cartQuantity}
             </div>
         </button>
         <button on:click={() => {showMenu = true}} class="lg:hidden">
@@ -75,7 +65,7 @@
                 <button on:click={openCart} class="relative mr-4">
                     <Icons strokeColor="#fff" type="cart" />
                     <div class="text-black text-xs absolute bottom-0 left-0 h-4 w-4 rounded-full -ml-2 -mb-2 border border-black flex items-center justify-center bg-white">
-                        {numberOfItemsInBasket}
+                        {$cartQuantity}
                     </div>
                 </button>
             </div>

@@ -20,16 +20,11 @@
 
 <script>
     import GridTile from '$lib/GridTile.svelte';
-    import { cart } from '../../store.js';
+    import { getCartItems } from '../../store.js';
     export let product;
 
     let highlightedImageSrc = product?.images?.edges[0]?.node?.originalSrc;
     let selectedOptions = {};
-
-    let cartItems = [];
-    if(typeof window !== 'undefined') {
-        cartItems =  JSON.parse(localStorage.getItem('cart')) || []
-    }
 
     product?.options.forEach((option) => {
         selectedOptions = {...selectedOptions, [option.name]: option.values[0]}
@@ -37,31 +32,24 @@
 
     async function addToCart() {
         let variantId;
-        let variants;
+        let cartId;
+        if(typeof window !== 'undefined') {
+            cartId = JSON.parse(localStorage.getItem('cartId'));
+        }
         product.variants.edges.forEach((variant) => {
             let result = variant.node.selectedOptions.every((option) => {
                 return selectedOptions[option.name] === option.value
             });
             if(result) {
                 variantId = variant.node.id;
-                variants = variant.node.title;
             }
-        })
+        });
+        await fetch('/addToCart.json', {
+            method: 'POST',
+            body: JSON.stringify({ cartId: cartId, variantId: variantId })
+        });
+        await getCartItems();
 
-        let newItem = {
-            variantId: variantId,
-            variants: variants,
-            name: product.title,
-            image: product?.images?.edges[0]?.node?.originalSrc,
-            price: product?.priceRange?.maxVariantPrice?.amount,
-            quantity: 1
-        };
-        cartItems = [...cartItems, newItem]
-
-        if(typeof window !== 'undefined') {
-            localStorage.setItem('cart', JSON.stringify(cartItems));
-            cart.set(cartItems);
-        }
     };
 </script>
 
