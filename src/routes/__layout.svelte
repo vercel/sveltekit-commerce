@@ -64,9 +64,10 @@
         console.log(event)
         let variantId = event.detail.body.variantId;
         let quantity = event.detail.body.quantity;
+        let lineId = event.detail.body.lineId;
         await fetch('/updateCart.json', {
             method: 'POST',
-            body: JSON.stringify({ cartId: cartId, variantId: variantId, quantity: quantity})
+            body: JSON.stringify({ cartId: cartId, variantId: variantId, quantity: quantity, lineId: lineId})
         });
         loadCart();
     };

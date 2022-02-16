@@ -23,6 +23,7 @@ export const getCartItems = async () => {
               lines(first: 100) {
                   edges {
                   node {
+                      id
                       quantity
                       estimatedCost {
                       subtotalAmount {
@@ -66,6 +67,7 @@ export const getCartItems = async () => {
       sum += d.node.quantity
     });
     cartQuantity.set(sum);
+    console.log(shopifyResponse)
     return shopifyResponse;
   } catch (error) {
     console.log(error);

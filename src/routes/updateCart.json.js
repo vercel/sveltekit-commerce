@@ -5,6 +5,7 @@ export const post = async ({request}) => {
   let cartId = body.cartId;
   let variantId = body.variantId;
   let quantity = body.quantity;
+  let lineId = body.lineId;
   console.log(body)
   const response = await api({
     query: `
@@ -21,6 +22,7 @@ export const post = async ({request}) => {
         cartId: cartId, 
         lines: [
             {
+              id: lineId,
               merchandiseId: variantId,
               quantity: quantity
             }

@@ -19,14 +19,20 @@
         dispatch('removeProduct', {
 			body: {
                 variantId: item.node.merchandise.id,
-                quantity: quantity
+                quantity: quantity,
+                lineId: item.node.id
             }
 		});
     };
 
     function removeEntireItem(item, i) {
-        items = [...items.slice(0, i), ...items.slice(i + 1)];
-        updateLocalStorage();
+        dispatch('removeProduct', {
+			body: {
+                variantId: item.node.merchandise.id,
+                quantity: 0,
+                lineId: item.node.id
+            }
+		});
     };
 
     async function checkout() {
