@@ -1,10 +1,10 @@
 import { api } from './_shopifyApi.js';
 
-export const post = async ({request}) => {
+export const post = async ({ request }) => {
   let body = await request.json();
-  console.log(body)
   let cartId = body.cartId;
   let variantId = body.variantId;
+
   const response = await api({
     query: `
       mutation addToCart($cartId: ID!, $lines: [CartLineInput!]!) {
@@ -29,15 +29,15 @@ export const post = async ({request}) => {
         }
       }
     `,
-    variables: { 
-      cartId: cartId, 
+    variables: {
+      cartId: cartId,
       lines: [
         {
           merchandiseId: variantId,
           quantity: 1
         }
-      ] 
-    },
+      ]
+    }
   });
 
   return response;

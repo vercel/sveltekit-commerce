@@ -74,16 +74,6 @@
     });
     loadCart();
   }
-
-  async function getCheckoutUrl(event) {
-    let lineItems = event.detail.body;
-    const res = await fetch('/getCheckoutUrl.json', {
-      method: 'POST',
-      body: JSON.stringify({ data: lineItems })
-    });
-    const checkoutUrl = await res.json();
-    window.open(checkoutUrl.data.cartCreate.cart.checkoutUrl, '_blank');
-  }
 </script>
 
 <main class={`${showCart ? 'h-screen' : 'min-h-screen'} text-white overflow-hidden`}>

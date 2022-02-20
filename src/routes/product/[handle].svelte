@@ -19,44 +19,36 @@
 </script>
 
 <script>
-    import GridTile from '$lib/GridTile.svelte';
-    import { getCartItems } from '../../store.js';
-    export let product;
+  import GridTile from '$lib/GridTile.svelte';
+  import { getCartItems } from '../../store.js';
+  export let product;
 
-    let highlightedImageSrc = product?.images?.edges[0]?.node?.originalSrc;
-    let selectedOptions = {};
+  let highlightedImageSrc = product?.images?.edges[0]?.node?.originalSrc;
+  let selectedOptions = {};
 
-    product?.options.forEach((option) => {
-        selectedOptions = {...selectedOptions, [option.name]: option.values[0]}
-    })
+  product?.options.forEach((option) => {
+    selectedOptions = { ...selectedOptions, [option.name]: option.values[0] };
+  });
 
-    async function addToCart() {
-        let variantId;
-        let cartId;
-        if(typeof window !== 'undefined') {
-            cartId = JSON.parse(localStorage.getItem('cartId'));
-        }
-        product.variants.edges.forEach((variant) => {
-            let result = variant.node.selectedOptions.every((option) => {
-                return selectedOptions[option.name] === option.value
-            });
-            if(result) {
-                variantId = variant.node.id;
-            }
-        });
-        await fetch('/addToCart.json', {
-            method: 'POST',
-            body: JSON.stringify({ cartId: cartId, variantId: variantId })
-        });
-        await getCartItems();
-
-    };
-    cartItems = [...cartItems, newItem];
-
+  async function addToCart() {
+    let variantId;
+    let cartId;
     if (typeof window !== 'undefined') {
-      localStorage.setItem('cart', JSON.stringify(cartItems));
-      cart.set(cartItems);
+      cartId = JSON.parse(localStorage.getItem('cartId'));
     }
+    product.variants.edges.forEach((variant) => {
+      let result = variant.node.selectedOptions.every((option) => {
+        return selectedOptions[option.name] === option.value;
+      });
+      if (result) {
+        variantId = variant.node.id;
+      }
+    });
+    await fetch('/addToCart.json', {
+      method: 'POST',
+      body: JSON.stringify({ cartId: cartId, variantId: variantId })
+    });
+    await getCartItems();
   }
 </script>
 
