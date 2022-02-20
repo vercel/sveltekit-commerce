@@ -10,7 +10,7 @@ export const get = async () => {
                     products(
                         first: 100,
                         sortKey: TITLE
-    
+
                     ) {
                         edges{
                             node {
@@ -69,10 +69,10 @@ export const get = async () => {
                                     }
                                     edges {
                                         node {
-                                        originalSrc
-                                        altText
-                                        width
-                                        height
+                                            originalSrc
+                                            altText
+                                            width
+                                            height
                                         }
                                     }
                                 }
@@ -81,7 +81,7 @@ export const get = async () => {
                     }
                 }
             }
-          }
+        }
     }`
   });
   return response;
