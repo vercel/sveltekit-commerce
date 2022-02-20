@@ -5,14 +5,14 @@ export const post = async ({ request }) => {
   let lineItems = body.data;
   const response = await api({
     query: `
-          mutation calculateCart($lineItems: [CartLineInput!]) {
-              cartCreate(input: { lines: $lineItems }) {
-                  cart {
-                      checkoutUrl
-                  }
-              }
+      mutation calculateCart($lineItems: [CartLineInput!]) {
+        cartCreate(input: { lines: $lineItems }) {
+          cart {
+            checkoutUrl
           }
-      `,
+        }
+      }
+    `,
     variables: { lineItems }
   });
 
