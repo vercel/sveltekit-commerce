@@ -1,7 +1,8 @@
-const endpoint = 'https://next-js-store.myshopify.com/api/2021-10/graphql.json';
-const key = 'ef7d41c7bf7e1c214074d0d3047bcd7b';
-
+const endpoint = import.meta.env.VITE_SHOPIFY_API_ENDPOINT;
+const key = import.meta.env.VITE_SHOPIFY_STOREFRONT_API_TOKEN;
+ 
 export const api = async ({ query, variables }) => {
+	console.log(endpoint)
   try {
     const result = await fetch(endpoint, {
       method: 'POST',
