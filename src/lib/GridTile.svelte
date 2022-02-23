@@ -6,6 +6,7 @@
     export let imageSrc;
     export let price = '';
     export let currencyCode = '';
+    
     let hover = false;
 </script>
 
@@ -20,9 +21,6 @@
                 <div class="text-sm bg-black p-3 w-fit">
                     ${price} {currencyCode}
                 </div>
-            </div>
-            <div class={`p-3 absolute top-0 right-0 ${hover ? 'bg-transparent' : 'bg-black'}`}>
-                <Icons type="heart" strokeColor={hover ? 'rgb(244 114 182)' : '#fff'} />
             </div>
         {/if}
     </button>

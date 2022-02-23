@@ -1,26 +1,24 @@
 <script context="module">
     export async function load ({fetch}) {
         const res = await fetch('/getAllCollections.json');
-        if (res.ok) {
-			const result = await res.json()
-            const collections = result.data.collections.edges;
-
+        const result = await res.json();
+        if (res.status === 200) {
+            const collections = result?.data?.collections?.edges;
 			return {
 				props: { collections }
 			};
-		}
-        const { message } = await res.json();
-
-		return {
-			error: new Error(message)
-		};
+		} else {
+            return {
+                props: { error }
+            };
+        }
     };
 </script>
 <script>
     import ThreeItemGrid from '$lib/ThreeItemGrid.svelte';
     import Carousel from '$lib/Carousel.svelte';
-
     export let collections = [];
+
     $: clothesCollection = collections[0]?.node?.products?.edges;
     $: featuredCollection = collections[1]?.node?.products?.edges;
 </script>

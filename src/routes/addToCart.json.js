@@ -2,7 +2,6 @@ import { api } from './_shopifyApi.js';
 
 export const post = async ({request}) => {
   let body = await request.json();
-  console.log(body)
   let cartId = body.cartId;
   let variantId = body.variantId;
   const response = await api({

@@ -96,7 +96,7 @@
         </div>
         {#if items.length !== 0}
             <button on:click={checkout} class="flex items-center justify-center uppercase text-sm mt-6 font-medium opacity-90 hover:opacity-100 w-full text-black p-3 bg-white">
-                <span>Procede to Checkout</span>
+                <span>Proceed to Checkout</span>
                 {#if loading}
                     <div class="ml-4 lds-ring"><div></div><div></div><div></div><div></div></div>
                 {/if}

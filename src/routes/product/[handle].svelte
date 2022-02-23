@@ -20,17 +20,36 @@
 
 <script>
     import GridTile from '$lib/GridTile.svelte';
+    import DescriptionToggle from '$lib/DescriptionToggle.svelte';   
+    import Icons from '$lib/Icons.svelte';
     import { getCartItems } from '../../store.js';
     export let product;
 
-    let highlightedImageSrc = product?.images?.edges[0]?.node?.originalSrc;
     let selectedOptions = {};
-
+    let cartLoading = false;
+    let currentImageIndex = 0;
+    $: highlightedImageSrc = product?.images?.edges[currentImageIndex]?.node?.originalSrc;
     product?.options.forEach((option) => {
         selectedOptions = {...selectedOptions, [option.name]: option.values[0]}
     })
 
+    function changeHighlightedImage(direction) {
+        if(direction === 'next') {
+            if(currentImageIndex+1 < product?.images?.edges.length) {
+                currentImageIndex = currentImageIndex+1
+            } else {
+                currentImageIndex = 0
+            }
+        } else {
+            if(currentImageIndex === 0) {
+                currentImageIndex = product?.images?.edges.length-1
+            } else {
+                currentImageIndex = currentImageIndex-1
+            }
+        }
+    };
     async function addToCart() {
+        cartLoading = true;
         let variantId;
         let cartId;
         if(typeof window !== 'undefined') {
@@ -47,25 +66,35 @@
         await fetch('/addToCart.json', {
             method: 'POST',
             body: JSON.stringify({ cartId: cartId, variantId: variantId })
-        });
+        }).then((response) => {
+            return response.json()
+        }).then((res) => {
+            console.log(res)
+        })
         await getCartItems();
-
+        cartLoading = false;
     };
 </script>
 
 <div>
     {#if product}
     <div class="min-h-screen flex md:flex-row flex-col">
-        <div class="md:w-2/3 h-full">
+        <div class="md:w-2/3 md:h-90">
             {#key highlightedImageSrc}
-                <div class="h-4/5 bg-violet-700">
+                <div class="relative h-4/5 bg-violet-700">
                      <GridTile title={product.title} price={product.priceRange.maxVariantPrice.amount} currencyCode={product.priceRange.maxVariantPrice.currencyCode} imageSrc={highlightedImageSrc} />
+                     {#if product?.images?.edges.length > 1}
+                        <div class="absolute z-40 right-0 bottom-0 p-6 ">
+                            <button on:click={() => {changeHighlightedImage('back')}} class="bg-violet-700 hover:bg-violet-800 border border-b border-t border-l border-black py-4 px-8"><Icons type="arrowLeft" /></button>
+                            <button on:click={() => {changeHighlightedImage('next')}} class="bg-violet-700 hover:bg-violet-800 -ml-2 border border-black py-4 px-8"><Icons type="arrowRight" /></button>
+                        </div>
+                     {/if}
                 </div>
             {/key}
             <div class="h-1/5 bg-violet-900 flex">
-                {#each product.images.edges as variant}
+                {#each product.images.edges as variant, i}
                     <div class="h-full w-1/4 bg-white">
-                        <GridTile on:click={() => {highlightedImageSrc = variant.node.originalSrc}} imageSrc={variant.node.originalSrc} removeLabels={true}/>
+                        <GridTile on:click={() => {currentImageIndex = i}} imageSrc={variant.node.originalSrc} removeLabels={true}/>
                     </div>
                 {/each}
             </div>
@@ -84,10 +113,74 @@
                 </div>
             {/each}
             <p>{product.description}</p>
-            <button on:click={addToCart} class="mt-12 opacity-90 hover:opacity-100 text-black bg-white w-full p-4 uppercase tracking-wide text-sm">
-                Add To Cart
+            <div class="mt-12 flex items-center justify-between">
+                <div class="flex items-center">
+                    <div class="mr-1">
+                        <Icons type="star" />
+                    </div>
+                    <div class="mr-1">
+                        <Icons type="star" />
+                    </div>
+                    <div class="mr-1">
+                        <Icons type="star" />
+                    </div>
+                    <div class="mr-1">
+                        <Icons type="star" />
+                    </div>
+                    <div class="mr-1 opacity-50">
+                        <Icons type="star" />
+                    </div>
+                </div>
+                <div class="opacity-50">
+                    36 Reviews
+                </div>
+            </div>
+            <button on:click={addToCart} class="mt-6 opacity-90 hover:opacity-100 text-black bg-white w-full p-4 uppercase tracking-wide text-sm flex justify-center items-center">
+                <span>Add To Cart</span>
+                {#if cartLoading}
+                    <div class="ml-4 lds-ring"><div></div><div></div><div></div><div></div></div>
+                {/if}
             </button>
+            <DescriptionToggle title="Care" description="This is a limited edition production run. Printing starts when the drop ends." />
+            <DescriptionToggle title="Details" description="This is a limited edition production run. Printing starts when the drop ends. Reminder: Bad Boys For Life. Shipping may take 10+ days due to COVID-19." />
         </div>
     </div>
     {/if}
 </div>
+<style>
+    .lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    }
+    .lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #000 transparent transparent transparent;
+    }
+    .lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+    }
+    .lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+    }
+    .lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+    }
+    @keyframes lds-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+    }
+</style>
