@@ -8,7 +8,7 @@
     let toggle = false;
 </script>
 
-<div on:click={() => {toggle = !toggle}} class="w-full border-b border-white/50 py-4 flex ">
+<div on:click={() => {toggle = !toggle}} class="text-sm w-full border-b border-white/50 py-4 flex ">
     <div class={`opacity-50 h-6 w-6 rotate ${toggle ? 'down' : ''}`}>
         <Icons type="caretRight" strokeColor="#fff" />
     </div>

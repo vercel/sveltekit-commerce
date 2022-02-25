@@ -12,7 +12,7 @@
 
 <div on:mouseenter={()=> {hover = true}} on:mouseleave={()=> {hover = false}} class="w-full h-full overflow-hidden">
     <button on:click class="relative w-full h-full flex items-center justify-center">
-        <img class={`h-full transition duration-300 ease-in-out ${hover ? 'scale-110' : ''}`} src={imageSrc} alt=""/>
+        <img class={`max-h-full transition duration-300 ease-in-out ${hover ? 'scale-110' : ''}`} src={imageSrc} alt=""/>
         {#if !removeLabels}
             <div class="absolute top-0 left-0">
                 <div class="bg-black text-2xl font-medium  p-3">

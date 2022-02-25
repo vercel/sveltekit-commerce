@@ -1,20 +1,28 @@
 <script context="module">
     export async function load ({params, fetch}) {
         const res = await fetch(`/product/getProduct-${params.handle}.json`);
-       
-        if (res.ok) {
-			const result = await res.json()
-            const product = result.data.productByHandle;
+        const result = await res.json()
+        const product = result.data.productByHandle;
 
-			return {
-				props: { product }
-			};
-		}
-        const { message } = await res.json();
-
-		return {
-			error: new Error(message)
-		};
+        const productsRes = await fetch('/search/getAllProducts.json');
+        const allProducts = await productsRes.json()
+        const featuredProducts = allProducts.data.products.edges.slice(0, 4);
+            
+        return {
+            props: { product, featuredProducts }
+        };
+        // if (res.ok) {
+		// 	const result = await res.json()
+        //  const product = result.data.productByHandle;
+            
+		// 	return {
+		// 		props: { product }
+		// 	};
+		// }
+        // const { message } = await res.json();
+		// return {
+		// 	error: new Error(message)
+		// };
     };
 </script>
 
@@ -24,7 +32,8 @@
     import Icons from '$lib/Icons.svelte';
     import { getCartItems } from '../../store.js';
     export let product;
-
+    export let featuredProducts;
+    console.log(featuredProducts)
     let selectedOptions = {};
     let cartLoading = false;
     let currentImageIndex = 0;
@@ -78,75 +87,90 @@
 
 <div>
     {#if product}
-    <div class="min-h-screen flex md:flex-row flex-col">
-        <div class="md:w-2/3 md:h-90">
-            {#key highlightedImageSrc}
-                <div class="relative h-4/5 bg-violet-700">
-                     <GridTile title={product.title} price={product.priceRange.maxVariantPrice.amount} currencyCode={product.priceRange.maxVariantPrice.currencyCode} imageSrc={highlightedImageSrc} />
-                     {#if product?.images?.edges.length > 1}
-                        <div class="absolute z-40 right-0 bottom-0 p-6 ">
-                            <button on:click={() => {changeHighlightedImage('back')}} class="bg-violet-700 hover:bg-violet-800 border border-b border-t border-l border-black py-4 px-8"><Icons type="arrowLeft" /></button>
-                            <button on:click={() => {changeHighlightedImage('next')}} class="bg-violet-700 hover:bg-violet-800 -ml-2 border border-black py-4 px-8"><Icons type="arrowRight" /></button>
+        <div class="flex md:flex-row flex-col">
+            <div class="md:w-2/3 md:h-90">
+                {#key highlightedImageSrc}
+                    <div class="relative h-4/5 bg-violet-700">
+                        <GridTile title={product.title} price={product.priceRange.maxVariantPrice.amount} currencyCode={product.priceRange.maxVariantPrice.currencyCode} imageSrc={highlightedImageSrc} />
+                        {#if product?.images?.edges.length > 1}
+                            <div class="absolute z-40 right-0 bottom-0 p-6 ">
+                                <button on:click={() => {changeHighlightedImage('back')}} class="bg-violet-700 hover:bg-violet-800 border border-b border-t border-l border-black py-4 px-8"><Icons type="arrowLeft" /></button>
+                                <button on:click={() => {changeHighlightedImage('next')}} class="bg-violet-700 hover:bg-violet-800 -ml-2 border border-black py-4 px-8"><Icons type="arrowRight" /></button>
+                            </div>
+                        {/if}
+                    </div>
+                {/key}
+                <div class="h-1/5 bg-violet-900 flex">
+                    {#each product.images.edges as variant, i}
+                        <div class="h-full w-1/4 bg-white">
+                            <GridTile on:click={() => {currentImageIndex = i}} imageSrc={variant.node.originalSrc} removeLabels={true}/>
                         </div>
-                     {/if}
+                    {/each}
                 </div>
-            {/key}
-            <div class="h-1/5 bg-violet-900 flex">
-                {#each product.images.edges as variant, i}
-                    <div class="h-full w-1/4 bg-white">
-                        <GridTile on:click={() => {currentImageIndex = i}} imageSrc={variant.node.originalSrc} removeLabels={true}/>
+            </div>
+            <div class="md:w-1/3 h-full p-6">
+                {#each product.options as option}
+                    <div class="mb-8">
+                        <div class="mb-4 uppercase text-sm tracking-wide"> {option.name} </div>
+                        <div class="flex">
+                            {#each option.values as value}
+                                <button on:click={() => {selectedOptions = {...selectedOptions, [option.name]: value}}} class={`${value.length <= 3 ? 'w-12' : 'px-2'} ${selectedOptions[option.name] === value ? 'opacity-100' : 'opacity-60'} transition duration-300 ease-in-out hover:scale-110 hover:opacity-100 border-white h-12 mr-3 flex items-center justify-center rounded-full border`}>
+                                    {value}
+                                </button>
+                            {/each}
+                        </div>
                     </div>
                 {/each}
+                <p class="text-sm">{product.description}</p>
+                <div class="mt-8 flex items-center justify-between">
+                    <div class="flex items-center">
+                        <div class="mr-1">
+                            <Icons type="star" />
+                        </div>
+                        <div class="mr-1">
+                            <Icons type="star" />
+                        </div>
+                        <div class="mr-1">
+                            <Icons type="star" />
+                        </div>
+                        <div class="mr-1">
+                            <Icons type="star" />
+                        </div>
+                        <div class="mr-1 opacity-50">
+                            <Icons type="star" />
+                        </div>
+                    </div>
+                    <div class="opacity-50 text-sm">
+                        36 Reviews
+                    </div>
+                </div>
+                <button on:click={addToCart} class="mt-6 opacity-90 hover:opacity-100 text-black bg-white w-full p-4 uppercase tracking-wide text-sm flex justify-center items-center">
+                    <span>Add To Cart</span>
+                    {#if cartLoading}
+                        <div class="ml-4 lds-ring"><div></div><div></div><div></div><div></div></div>
+                    {/if}
+                </button>
+                <DescriptionToggle title="Care" description="This is a limited edition production run. Printing starts when the drop ends." />
+                <DescriptionToggle title="Details" description="This is a limited edition production run. Printing starts when the drop ends. Reminder: Bad Boys For Life. Shipping may take 10+ days due to COVID-19." />
             </div>
         </div>
-        <div class="md:w-1/3 h-full p-6">
-            {#each product.options as option}
-                <div class="mb-8">
-                    <div class="mb-4 uppercase text-sm tracking-wide"> {option.name} </div>
-                    <div class="flex">
-                        {#each option.values as value}
-                            <button on:click={() => {selectedOptions = {...selectedOptions, [option.name]: value}}} class={`${value.length <= 3 ? 'w-12' : 'px-2'} ${selectedOptions[option.name] === value ? 'opacity-100' : 'opacity-60'} transition duration-300 ease-in-out hover:scale-110 hover:opacity-100 border-white h-12 mr-3 flex items-center justify-center rounded-full border`}>
-                                {value}
-                            </button>
-                        {/each}
-                    </div>
-                </div>
-            {/each}
-            <p>{product.description}</p>
-            <div class="mt-12 flex items-center justify-between">
-                <div class="flex items-center">
-                    <div class="mr-1">
-                        <Icons type="star" />
-                    </div>
-                    <div class="mr-1">
-                        <Icons type="star" />
-                    </div>
-                    <div class="mr-1">
-                        <Icons type="star" />
-                    </div>
-                    <div class="mr-1">
-                        <Icons type="star" />
-                    </div>
-                    <div class="mr-1 opacity-50">
-                        <Icons type="star" />
-                    </div>
-                </div>
-                <div class="opacity-50">
-                    36 Reviews
-                </div>
-            </div>
-            <button on:click={addToCart} class="mt-6 opacity-90 hover:opacity-100 text-black bg-white w-full p-4 uppercase tracking-wide text-sm flex justify-center items-center">
-                <span>Add To Cart</span>
-                {#if cartLoading}
-                    <div class="ml-4 lds-ring"><div></div><div></div><div></div><div></div></div>
-                {/if}
-            </button>
-            <DescriptionToggle title="Care" description="This is a limited edition production run. Printing starts when the drop ends." />
-            <DescriptionToggle title="Details" description="This is a limited edition production run. Printing starts when the drop ends. Reminder: Bad Boys For Life. Shipping may take 10+ days due to COVID-19." />
-        </div>
-    </div>
     {/if}
+    <div class="px-4 py-8">
+        <div class="text-3xl font-bold mb-4">Related Products</div>
+        <ul class="grid gap-4 grid-flow-row grid-cols-2 md:grid-cols-4">
+            {#each featuredProducts as product, i (product.node.id)}
+                <li>
+                    <div class="group block relative aspect-square overflow-hidden bg-zinc-800/50 border border-white/20">
+                        <a sveltekit:prefetch href={`/product/${product.node.handle}`}>
+                            <GridTile removeLabels={true} imageSrc={product.node.images.edges[0].node.originalSrc}/>
+                        </a>
+                    </div>
+                </li>
+            {/each}
+        </ul>
+    </div>
 </div>
+
 <style>
     .lds-ring {
     display: inline-block;
