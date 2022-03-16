@@ -12,7 +12,6 @@
             props: { product, featuredProducts }
         };
     };
-  }
 </script>
 
 <script>
@@ -142,9 +141,7 @@
                 <DescriptionToggle title="Care" description="This is a limited edition production run. Printing starts when the drop ends." />
                 <DescriptionToggle title="Details" description="This is a limited edition production run. Printing starts when the drop ends. Reminder: Bad Boys For Life. Shipping may take 10+ days due to COVID-19." />
             </div>
-          {/each}
         </div>
-    {/if}
     <div class="px-4 py-8">
         <div class="text-3xl font-bold mb-4">Related Products</div>
         <ul class="grid gap-4 grid-flow-row grid-cols-2 md:grid-cols-4">
@@ -159,6 +156,7 @@
             {/each}
         </ul>
     </div>
+    {/if}
 </div>
 
 <style>
