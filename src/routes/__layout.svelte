@@ -29,8 +29,6 @@
         if(typeof window !== 'undefined') {
             localStorage.setItem('cartId', JSON.stringify(cart?.data?.cartCreate?.cart?.id));
             localStorage.setItem('cartUrl', JSON.stringify(cart?.data?.cartCreate?.cart?.checkoutUrl));
-            openCart();
-
         };
     };
     async function loadCart() {
