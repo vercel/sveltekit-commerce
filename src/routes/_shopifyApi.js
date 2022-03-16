@@ -1,5 +1,6 @@
 const endpoint = import.meta.env.VITE_SHOPIFY_API_ENDPOINT;
 const key = import.meta.env.VITE_SHOPIFY_STOREFRONT_API_TOKEN;
+
 export const api = async ({ query, variables }) => {
   try {
     const result = await fetch(endpoint, {

@@ -4,13 +4,13 @@
     import { goto } from '$app/navigation';
     import Icons from './Icons.svelte';
 
-    let value = '';
-    function submit(e) {
-        if($page.url.pathname !== 'search') {
-            goto('/search')
-        }
-        search.set(value);
+  let value = '';
+  function submit(e) {
+    if ($page.url.pathname !== 'search') {
+      goto('/search');
     }
+    search.set(value);
+  }
 </script>
 
 <form on:submit|preventDefault={submit} class="relative w-full flex items-center">

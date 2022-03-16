@@ -11,19 +11,8 @@
         return {
             props: { product, featuredProducts }
         };
-        // if (res.ok) {
-		// 	const result = await res.json()
-        //  const product = result.data.productByHandle;
-            
-		// 	return {
-		// 		props: { product }
-		// 	};
-		// }
-        // const { message } = await res.json();
-		// return {
-		// 	error: new Error(message)
-		// };
     };
+  }
 </script>
 
 <script>
@@ -153,6 +142,7 @@
                 <DescriptionToggle title="Care" description="This is a limited edition production run. Printing starts when the drop ends." />
                 <DescriptionToggle title="Details" description="This is a limited edition production run. Printing starts when the drop ends. Reminder: Bad Boys For Life. Shipping may take 10+ days due to COVID-19." />
             </div>
+          {/each}
         </div>
     {/if}
     <div class="px-4 py-8">

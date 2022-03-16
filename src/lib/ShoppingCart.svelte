@@ -3,17 +3,14 @@
     import { api } from "../routes/_shopifyApi.js";
     import Icons from './Icons.svelte';
     import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
-
+	  const dispatch = createEventDispatcher();
     export let loading = false;
     export let items = [];
-
     function addOneItem(item, i) {
         dispatch('addProduct', {
 			body: item.node.merchandise.id
 		});
     };
-
     function removeOneItem(item, i) {
         let quantity = item.node.quantity - 1;
         dispatch('removeProduct', {
@@ -24,7 +21,6 @@
             }
 		});
     };
-
     function removeEntireItem(item, i) {
         dispatch('removeProduct', {
 			body: {
@@ -34,7 +30,6 @@
             }
 		});
     };
-
     async function checkout() {
         loading = true;
         let lineItems = items.map((d) => {

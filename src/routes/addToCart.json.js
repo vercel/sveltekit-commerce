@@ -4,6 +4,7 @@ export const post = async ({request}) => {
   let body = await request.json();
   let cartId = body.cartId;
   let variantId = body.variantId;
+
   const response = await api({
     query: `
       mutation addToCart($cartId: ID!, $lines: [CartLineInput!]!) {
@@ -28,6 +29,7 @@ export const post = async ({request}) => {
         }
       }
     `,
+
     variables: { 
       cartId: cartId, 
       lines: [
@@ -35,8 +37,8 @@ export const post = async ({request}) => {
           merchandiseId: variantId,
           quantity: 1
         }
-      ] 
-    },
+      ]
+    }
   });
 
   return response;
