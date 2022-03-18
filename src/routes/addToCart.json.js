@@ -1,6 +1,6 @@
 import { api } from './_shopifyApi.js';
 
-export const post = async ({request}) => {
+export const post = async ({ request }) => {
   let body = await request.json();
   let cartId = body.cartId;
   let variantId = body.variantId;
@@ -30,8 +30,8 @@ export const post = async ({request}) => {
       }
     `,
 
-    variables: { 
-      cartId: cartId, 
+    variables: {
+      cartId: cartId,
       lines: [
         {
           merchandiseId: variantId,

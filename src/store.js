@@ -60,14 +60,14 @@ export const getCartItems = async () => {
             }
         }
       `,
-      variables: { cartId },
+      variables: { cartId }
     });
     let sum = 0;
     shopifyResponse.body.data.cart.lines.edges.forEach((d) => {
-      sum += d.node.quantity
+      sum += d.node.quantity;
     });
     cartQuantity.set(sum);
-    console.log(shopifyResponse)
+    console.log(shopifyResponse);
     return shopifyResponse;
   } catch (error) {
     console.log(error);

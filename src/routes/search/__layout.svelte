@@ -6,7 +6,7 @@
                 <a data-testid="category-link" aria-selected="true" class="focus:underline hover:underline whitespace-nowrap" href="/search">All</a>
             </li>
             <li class="mt-2 text-sm text-gray-300">
-                <a data-testid="category-link" aria-selected="true" class="focus:underline hover:underline whitespace-nowrap" href="/search/featured">Featured</a>
+                 <a data-testid="category-link" aria-selected="true" class="focus:underline hover:underline whitespace-nowrap" href="/search/featured">Featured</a>
             </li>
             <li class="mt-2 text-sm text-gray-300">
                 <a data-testid="category-link" aria-selected="true" class="focus:underline hover:underline whitespace-nowrap" href="/search/clothes">Apparel</a>

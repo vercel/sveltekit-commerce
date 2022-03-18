@@ -5,7 +5,7 @@
     import SearchBar from "$lib/SearchBar.svelte";
     import { createEventDispatcher } from 'svelte';
 
-	  const dispatch = createEventDispatcher();
+	const dispatch = createEventDispatcher();
 
     $: currentRoute = $page.url.pathname;
 

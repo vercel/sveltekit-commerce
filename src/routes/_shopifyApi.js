@@ -16,10 +16,10 @@ export const api = async ({ query, variables }) => {
       body: await result.json()
     };
   } catch (error) {
-    	console.error('Error:', error);
-		return {
-			status: 500,
-			error: 'Error receiving data'
-		};
+    console.error('Error:', error);
+    return {
+      status: 500,
+      error: 'Error receiving data'
+    };
   }
 };

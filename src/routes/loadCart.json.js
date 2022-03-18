@@ -1,6 +1,6 @@
 import { api } from './_shopifyApi.js';
 
-export const post = async ({request}) => {
+export const post = async ({ request }) => {
   let cartId = await request.json();
   const response = await api({
     query: `
@@ -51,7 +51,7 @@ export const post = async ({request}) => {
           }
       }
     `,
-    variables: { cartId },
+    variables: { cartId }
   });
 
   return response;
