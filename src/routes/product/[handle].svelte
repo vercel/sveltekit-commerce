@@ -1,36 +1,52 @@
 <script context="module">
   export async function load({ params, fetch }) {
     const res = await fetch(`/product/getProduct-${params.handle}.json`);
+    const result = await res.json();
+    const product = result.data.productByHandle;
 
-    if (res.ok) {
-      const result = await res.json();
-      const product = result.data.productByHandle;
-
-      return {
-        props: { product }
-      };
-    }
-    const { message } = await res.json();
+    const productsRes = await fetch('/search/getAllProducts.json');
+    const allProducts = await productsRes.json();
+    const featuredProducts = allProducts.data.products.edges.slice(0, 4);
 
     return {
-      error: new Error(message)
+      props: { product, featuredProducts }
     };
   }
 </script>
 
 <script>
   import GridTile from '$lib/GridTile.svelte';
+  import DescriptionToggle from '$lib/DescriptionToggle.svelte';
+  import Icons from '$lib/Icons.svelte';
   import { getCartItems } from '../../store.js';
   export let product;
-
-  let highlightedImageSrc = product?.images?.edges[0]?.node?.originalSrc;
+  export let featuredProducts;
+  console.log(featuredProducts);
   let selectedOptions = {};
-
+  let cartLoading = false;
+  let currentImageIndex = 0;
+  $: highlightedImageSrc = product?.images?.edges[currentImageIndex]?.node?.originalSrc;
   product?.options.forEach((option) => {
     selectedOptions = { ...selectedOptions, [option.name]: option.values[0] };
   });
 
+  function changeHighlightedImage(direction) {
+    if (direction === 'next') {
+      if (currentImageIndex + 1 < product?.images?.edges.length) {
+        currentImageIndex = currentImageIndex + 1;
+      } else {
+        currentImageIndex = 0;
+      }
+    } else {
+      if (currentImageIndex === 0) {
+        currentImageIndex = product?.images?.edges.length - 1;
+      } else {
+        currentImageIndex = currentImageIndex - 1;
+      }
+    }
+  }
   async function addToCart() {
+    cartLoading = true;
     let variantId;
     let cartId;
     if (typeof window !== 'undefined') {
@@ -47,31 +63,56 @@
     await fetch('/addToCart.json', {
       method: 'POST',
       body: JSON.stringify({ cartId: cartId, variantId: variantId })
-    });
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((res) => {
+        console.log(res);
+      });
     await getCartItems();
+    cartLoading = false;
   }
 </script>
 
 <div>
   {#if product}
-    <div class="flex min-h-screen flex-col md:flex-row">
-      <div class="h-full md:w-2/3">
+    <div class="flex flex-col md:flex-row">
+      <div class="md:h-90 md:w-2/3">
         {#key highlightedImageSrc}
-          <div class="h-4/5 bg-violet-700">
+          <div class="relative h-4/5 bg-violet-700">
             <GridTile
               title={product.title}
               price={product.priceRange.maxVariantPrice.amount}
               currencyCode={product.priceRange.maxVariantPrice.currencyCode}
               imageSrc={highlightedImageSrc}
             />
+            {#if product?.images?.edges.length > 1}
+              <div class="absolute right-0 bottom-0 z-40 p-6 ">
+                <button
+                  on:click={() => {
+                    changeHighlightedImage('back');
+                  }}
+                  class="border border-b border-t border-l border-black bg-violet-700 py-4 px-8 hover:bg-violet-800"
+                  ><Icons type="arrowLeft" /></button
+                >
+                <button
+                  on:click={() => {
+                    changeHighlightedImage('next');
+                  }}
+                  class="-ml-2 border border-black bg-violet-700 py-4 px-8 hover:bg-violet-800"
+                  ><Icons type="arrowRight" /></button
+                >
+              </div>
+            {/if}
           </div>
         {/key}
         <div class="flex h-1/5 bg-violet-900">
-          {#each product.images.edges as variant}
+          {#each product.images.edges as variant, i}
             <div class="h-full w-1/4 bg-white">
               <GridTile
                 on:click={() => {
-                  highlightedImageSrc = variant.node.originalSrc;
+                  currentImageIndex = i;
                 }}
                 imageSrc={variant.node.originalSrc}
                 removeLabels={true}
@@ -100,14 +141,107 @@
             </div>
           </div>
         {/each}
-        <p>{product.description}</p>
+        <p class="text-sm">{product.description}</p>
+        <div class="mt-8 flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="mr-1">
+              <Icons type="star" />
+            </div>
+            <div class="mr-1">
+              <Icons type="star" />
+            </div>
+            <div class="mr-1">
+              <Icons type="star" />
+            </div>
+            <div class="mr-1">
+              <Icons type="star" />
+            </div>
+            <div class="mr-1 opacity-50">
+              <Icons type="star" />
+            </div>
+          </div>
+          <div class="text-sm opacity-50">36 Reviews</div>
+        </div>
         <button
           on:click={addToCart}
-          class="mt-12 w-full bg-white p-4 text-sm uppercase tracking-wide text-black opacity-90 hover:opacity-100"
+          class="mt-6 flex w-full items-center justify-center bg-white p-4 text-sm uppercase tracking-wide text-black opacity-90 hover:opacity-100"
         >
-          Add To Cart
+          <span>Add To Cart</span>
+          {#if cartLoading}
+            <div class="lds-ring ml-4">
+              <div />
+              <div />
+              <div />
+              <div />
+            </div>
+          {/if}
         </button>
+        <DescriptionToggle
+          title="Care"
+          description="This is a limited edition production run. Printing starts when the drop ends."
+        />
+        <DescriptionToggle
+          title="Details"
+          description="This is a limited edition production run. Printing starts when the drop ends. Reminder: Bad Boys For Life. Shipping may take 10+ days due to COVID-19."
+        />
       </div>
+    </div>
+    <div class="px-4 py-8">
+      <div class="mb-4 text-3xl font-bold">Related Products</div>
+      <ul class="grid grid-flow-row grid-cols-2 gap-4 md:grid-cols-4">
+        {#each featuredProducts as product, i (product.node.id)}
+          <li>
+            <div
+              class="group relative block aspect-square overflow-hidden border border-white/20 bg-zinc-800/50"
+            >
+              <a sveltekit:prefetch href={`/product/${product.node.handle}`}>
+                <GridTile
+                  removeLabels={true}
+                  imageSrc={product.node.images.edges[0].node.originalSrc}
+                />
+              </a>
+            </div>
+          </li>
+        {/each}
+      </ul>
     </div>
   {/if}
 </div>
+
+<style>
+  .lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 20px;
+    height: 20px;
+  }
+  .lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: 2px;
+    border: 2px solid #000;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #000 transparent transparent transparent;
+  }
+  .lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+  }
+  .lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+  .lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+  }
+  @keyframes lds-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+</style>

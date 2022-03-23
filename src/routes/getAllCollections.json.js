@@ -4,7 +4,7 @@ export const get = async () => {
   const response = await api({
     query: `{
         collections(first: 100) {
-            edges {
+             edges {
                 node {
                     handle
                     products(
@@ -84,5 +84,6 @@ export const get = async () => {
         }
     }`
   });
+
   return response;
 };

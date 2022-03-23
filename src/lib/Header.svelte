@@ -23,8 +23,8 @@
   }
 </script>
 
-<nav class="flex items-center justify-between border-b border-zinc-700 p-4 lg:px-6">
-  <div class="flex items-center">
+<nav class="flex items-center border-b border-zinc-700 p-4 lg:px-6">
+  <div class="flex w-1/3 items-center">
     <div class="mr-4" sveltekit:prefetch class:active={currentRoute === '/'}>
       <a href="/" sveltekit:prefetch class="">
         <picture>
@@ -47,14 +47,14 @@
       {/each}
     </div>
   </div>
-  <div class="hidden w-1/2 lg:block">
+  <div class="hidden w-1/3 lg:block">
     <SearchBar />
   </div>
-  <div class="flex items-center">
+  <div class="ml-auto flex items-center">
     <button on:click={openCart} class="relative mr-4">
       <Icons strokeColor="#fff" type="cart" />
       <div
-        class="absolute bottom-0 left-0 -ml-2 -mb-2 flex h-4 w-4 items-center justify-center rounded-full border border-black bg-white text-xs text-black"
+        class="absolute bottom-0 left-0 -ml-3 -mb-3 flex h-5 w-5 items-center justify-center rounded-full border border-black bg-white text-xs text-black"
       >
         {$cartQuantity}
       </div>
@@ -87,7 +87,7 @@
           <button on:click={openCart} class="relative mr-4">
             <Icons strokeColor="#fff" type="cart" />
             <div
-              class="absolute bottom-0 left-0 -ml-2 -mb-2 flex h-4 w-4 items-center justify-center rounded-full border border-black bg-white text-xs text-black"
+              class="absolute bottom-0 left-0 -ml-3 -mb-3 flex h-5 w-5 items-center justify-center rounded-full border border-black bg-white text-xs text-black"
             >
               {$cartQuantity}
             </div>
@@ -95,7 +95,12 @@
         </div>
         <div class="mt-6 flex w-full flex-col">
           {#each tabs as tab, i (tab.name)}
-            <div class:active={currentRoute === tab.path}>
+            <div
+              class:active={currentRoute === tab.path}
+              on:click={() => {
+                showMenu = false;
+              }}
+            >
               <a
                 sveltekit:prefetch
                 href={tab.path}

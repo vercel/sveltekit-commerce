@@ -11,12 +11,15 @@ export const api = async ({ query, variables }) => {
       },
       body: { query, variables } && JSON.stringify({ query, variables })
     });
-
     return {
       status: result.status,
       body: await result.json()
     };
   } catch (error) {
-    console.log(error);
+    console.error('Error:', error);
+    return {
+      status: 500,
+      error: 'Error receiving data'
+    };
   }
 };

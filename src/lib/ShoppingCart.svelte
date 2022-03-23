@@ -1,19 +1,16 @@
 <script>
-  // import { cart } from '../store';
-  // import { api } from '../routes/_shopifyApi.js';
+  import { cart } from '../store';
+  import { api } from '../routes/_shopifyApi.js';
   import Icons from './Icons.svelte';
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
-
   export let loading = false;
   export let items = [];
-
   function addOneItem(item, i) {
     dispatch('addProduct', {
       body: item.node.merchandise.id
     });
   }
-
   function removeOneItem(item, i) {
     let quantity = item.node.quantity - 1;
     dispatch('removeProduct', {
@@ -24,7 +21,6 @@
       }
     });
   }
-
   function removeEntireItem(item, i) {
     dispatch('removeProduct', {
       body: {
@@ -34,7 +30,6 @@
       }
     });
   }
-
   async function checkout() {
     loading = true;
     let lineItems = items.map((d) => {
@@ -70,7 +65,7 @@
       {#each items as item, i (i)}
         <div class="mb-2 flex w-full">
           <img
-            alt={item.node.merchandise.product.title}
+            alt=""
             class="w-20 flex-none bg-white"
             src={item.node.merchandise.product.images.edges[0].node.originalSrc}
           />

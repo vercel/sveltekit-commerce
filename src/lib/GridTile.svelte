@@ -1,11 +1,10 @@
 <script>
-  import Icons from '$lib/Icons.svelte';
-
   export let title = '';
   export let removeLabels = false;
   export let imageSrc;
   export let price = '';
   export let currencyCode = '';
+
   let hover = false;
 </script>
 
@@ -20,7 +19,9 @@
 >
   <button on:click class="relative flex h-full w-full items-center justify-center">
     <img
-      class={`h-full transition duration-300 ease-in-out ${hover ? 'scale-110' : ''}`}
+      class={`w-full md:w-1/2 lg:w-full flex-none transition duration-300 ease-in-out ${
+        hover ? 'scale-110' : ''
+      }`}
       src={imageSrc}
       alt=""
     />
@@ -33,9 +34,6 @@
           ${price}
           {currencyCode}
         </div>
-      </div>
-      <div class={`p-3 absolute top-0 right-0 ${hover ? 'bg-transparent' : 'bg-black'}`}>
-        <Icons type="heart" strokeColor={hover ? 'rgb(244 114 182)' : '#fff'} />
       </div>
     {/if}
   </button>

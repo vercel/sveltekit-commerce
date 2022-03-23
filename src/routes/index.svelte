@@ -3,7 +3,7 @@
     const res = await fetch('/getAllCollections.json');
     if (res.ok) {
       const result = await res.json();
-      const collections = result.data.collections.edges;
+      const collections = result?.data?.collections?.edges;
 
       return {
         props: { collections }
