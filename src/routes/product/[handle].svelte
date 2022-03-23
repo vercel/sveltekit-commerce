@@ -1,172 +1,221 @@
 <script context="module">
-    export async function load ({params, fetch}) {
-        const res = await fetch(`/product/getProduct-${params.handle}.json`);
-        const result = await res.json()
-        const product = result.data.productByHandle;
+  export async function load({ params, fetch }) {
+    const res = await fetch(`/product/getProduct-${params.handle}.json`);
+    const result = await res.json();
+    const product = result.data.productByHandle;
 
-        const productsRes = await fetch('/search/getAllProducts.json');
-        const allProducts = await productsRes.json()
-        const featuredProducts = allProducts.data.products.edges.slice(0, 4);
-            
-        return {
-            props: { product, featuredProducts }
-        };
+    const productsRes = await fetch('/search/getAllProducts.json');
+    const allProducts = await productsRes.json();
+    const featuredProducts = allProducts.data.products.edges.slice(0, 4);
+
+    return {
+      props: { product, featuredProducts }
     };
+  }
 </script>
 
 <script>
-    import GridTile from '$lib/GridTile.svelte';
-    import DescriptionToggle from '$lib/DescriptionToggle.svelte';   
-    import Icons from '$lib/Icons.svelte';
-    import { getCartItems } from '../../store.js';
-    export let product;
-    export let featuredProducts;
-    console.log(featuredProducts)
-    let selectedOptions = {};
-    let cartLoading = false;
-    let currentImageIndex = 0;
-    $: highlightedImageSrc = product?.images?.edges[currentImageIndex]?.node?.originalSrc;
-    product?.options.forEach((option) => {
-        selectedOptions = {...selectedOptions, [option.name]: option.values[0]}
-    })
+  import GridTile from '$lib/GridTile.svelte';
+  import DescriptionToggle from '$lib/DescriptionToggle.svelte';
+  import Icons from '$lib/Icons.svelte';
+  import { getCartItems } from '../../store.js';
+  export let product;
+  export let featuredProducts;
+  console.log(featuredProducts);
+  let selectedOptions = {};
+  let cartLoading = false;
+  let currentImageIndex = 0;
+  $: highlightedImageSrc = product?.images?.edges[currentImageIndex]?.node?.originalSrc;
+  product?.options.forEach((option) => {
+    selectedOptions = { ...selectedOptions, [option.name]: option.values[0] };
+  });
 
-    function changeHighlightedImage(direction) {
-        if(direction === 'next') {
-            if(currentImageIndex+1 < product?.images?.edges.length) {
-                currentImageIndex = currentImageIndex+1
-            } else {
-                currentImageIndex = 0
-            }
-        } else {
-            if(currentImageIndex === 0) {
-                currentImageIndex = product?.images?.edges.length-1
-            } else {
-                currentImageIndex = currentImageIndex-1
-            }
-        }
-    };
-    async function addToCart() {
-        cartLoading = true;
-        let variantId;
-        let cartId;
-        if(typeof window !== 'undefined') {
-            cartId = JSON.parse(localStorage.getItem('cartId'));
-        }
-        product.variants.edges.forEach((variant) => {
-            let result = variant.node.selectedOptions.every((option) => {
-                return selectedOptions[option.name] === option.value
-            });
-            if(result) {
-                variantId = variant.node.id;
-            }
-        });
-        await fetch('/addToCart.json', {
-            method: 'POST',
-            body: JSON.stringify({ cartId: cartId, variantId: variantId })
-        }).then((response) => {
-            return response.json()
-        }).then((res) => {
-            console.log(res)
-        })
-        await getCartItems();
-        cartLoading = false;
-    };
+  function changeHighlightedImage(direction) {
+    if (direction === 'next') {
+      if (currentImageIndex + 1 < product?.images?.edges.length) {
+        currentImageIndex = currentImageIndex + 1;
+      } else {
+        currentImageIndex = 0;
+      }
+    } else {
+      if (currentImageIndex === 0) {
+        currentImageIndex = product?.images?.edges.length - 1;
+      } else {
+        currentImageIndex = currentImageIndex - 1;
+      }
+    }
+  }
+  async function addToCart() {
+    cartLoading = true;
+    let variantId;
+    let cartId;
+    if (typeof window !== 'undefined') {
+      cartId = JSON.parse(localStorage.getItem('cartId'));
+    }
+    product.variants.edges.forEach((variant) => {
+      let result = variant.node.selectedOptions.every((option) => {
+        return selectedOptions[option.name] === option.value;
+      });
+      if (result) {
+        variantId = variant.node.id;
+      }
+    });
+    await fetch('/addToCart.json', {
+      method: 'POST',
+      body: JSON.stringify({ cartId: cartId, variantId: variantId })
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((res) => {
+        console.log(res);
+      });
+    await getCartItems();
+    cartLoading = false;
+  }
 </script>
 
 <div>
-    {#if product}
-        <div class="flex md:flex-row flex-col">
-            <div class="md:w-2/3 md:h-90">
-                {#key highlightedImageSrc}
-                    <div class="relative h-4/5 bg-violet-700">
-                        <GridTile title={product.title} price={product.priceRange.maxVariantPrice.amount} currencyCode={product.priceRange.maxVariantPrice.currencyCode} imageSrc={highlightedImageSrc} />
-                        {#if product?.images?.edges.length > 1}
-                            <div class="absolute z-40 right-0 bottom-0 p-6 ">
-                                <button on:click={() => {changeHighlightedImage('back')}} class="bg-violet-700 hover:bg-violet-800 border border-b border-t border-l border-black py-4 px-8"><Icons type="arrowLeft" /></button>
-                                <button on:click={() => {changeHighlightedImage('next')}} class="bg-violet-700 hover:bg-violet-800 -ml-2 border border-black py-4 px-8"><Icons type="arrowRight" /></button>
-                            </div>
-                        {/if}
-                    </div>
-                {/key}
-                <div class="h-1/5 bg-violet-900 flex">
-                    {#each product.images.edges as variant, i}
-                        <div class="h-full w-1/4 bg-white">
-                            <GridTile on:click={() => {currentImageIndex = i}} imageSrc={variant.node.originalSrc} removeLabels={true}/>
-                        </div>
-                    {/each}
-                </div>
+  {#if product}
+    <div class="flex flex-col md:flex-row">
+      <div class="md:h-90 md:w-2/3">
+        {#key highlightedImageSrc}
+          <div class="relative h-4/5 bg-violet-700">
+            <GridTile
+              title={product.title}
+              price={product.priceRange.maxVariantPrice.amount}
+              currencyCode={product.priceRange.maxVariantPrice.currencyCode}
+              imageSrc={highlightedImageSrc}
+            />
+            {#if product?.images?.edges.length > 1}
+              <div class="absolute right-0 bottom-0 z-40 p-6 ">
+                <button
+                  on:click={() => {
+                    changeHighlightedImage('back');
+                  }}
+                  class="border border-b border-t border-l border-black bg-violet-700 py-4 px-8 hover:bg-violet-800"
+                  ><Icons type="arrowLeft" /></button
+                >
+                <button
+                  on:click={() => {
+                    changeHighlightedImage('next');
+                  }}
+                  class="-ml-2 border border-black bg-violet-700 py-4 px-8 hover:bg-violet-800"
+                  ><Icons type="arrowRight" /></button
+                >
+              </div>
+            {/if}
+          </div>
+        {/key}
+        <div class="flex h-1/5 bg-violet-900">
+          {#each product.images.edges as variant, i}
+            <div class="h-full w-1/4 bg-white">
+              <GridTile
+                on:click={() => {
+                  currentImageIndex = i;
+                }}
+                imageSrc={variant.node.originalSrc}
+                removeLabels={true}
+              />
             </div>
-            <div class="md:w-1/3 h-full p-6">
-                {#each product.options as option}
-                    <div class="mb-8">
-                        <div class="mb-4 uppercase text-sm tracking-wide"> {option.name} </div>
-                        <div class="flex">
-                            {#each option.values as value}
-                                <button on:click={() => {selectedOptions = {...selectedOptions, [option.name]: value}}} class={`${value.length <= 3 ? 'w-12' : 'px-2'} ${selectedOptions[option.name] === value ? 'opacity-100' : 'opacity-60'} transition duration-300 ease-in-out hover:scale-110 hover:opacity-100 border-white h-12 mr-3 flex items-center justify-center rounded-full border`}>
-                                    {value}
-                                </button>
-                            {/each}
-                        </div>
-                    </div>
-                {/each}
-                <p class="text-sm">{product.description}</p>
-                <div class="mt-8 flex items-center justify-between">
-                    <div class="flex items-center">
-                        <div class="mr-1">
-                            <Icons type="star" />
-                        </div>
-                        <div class="mr-1">
-                            <Icons type="star" />
-                        </div>
-                        <div class="mr-1">
-                            <Icons type="star" />
-                        </div>
-                        <div class="mr-1">
-                            <Icons type="star" />
-                        </div>
-                        <div class="mr-1 opacity-50">
-                            <Icons type="star" />
-                        </div>
-                    </div>
-                    <div class="opacity-50 text-sm">
-                        36 Reviews
-                    </div>
-                </div>
-                <button on:click={addToCart} class="mt-6 opacity-90 hover:opacity-100 text-black bg-white w-full p-4 uppercase tracking-wide text-sm flex justify-center items-center">
-                    <span>Add To Cart</span>
-                    {#if cartLoading}
-                        <div class="ml-4 lds-ring"><div></div><div></div><div></div><div></div></div>
-                    {/if}
-                </button>
-                <DescriptionToggle title="Care" description="This is a limited edition production run. Printing starts when the drop ends." />
-                <DescriptionToggle title="Details" description="This is a limited edition production run. Printing starts when the drop ends. Reminder: Bad Boys For Life. Shipping may take 10+ days due to COVID-19." />
-            </div>
+          {/each}
         </div>
-    <div class="px-4 py-8">
-        <div class="text-3xl font-bold mb-4">Related Products</div>
-        <ul class="grid gap-4 grid-flow-row grid-cols-2 md:grid-cols-4">
-            {#each featuredProducts as product, i (product.node.id)}
-                <li>
-                    <div class="group block relative aspect-square overflow-hidden bg-zinc-800/50 border border-white/20">
-                        <a sveltekit:prefetch href={`/product/${product.node.handle}`}>
-                            <GridTile removeLabels={true} imageSrc={product.node.images.edges[0].node.originalSrc}/>
-                        </a>
-                    </div>
-                </li>
-            {/each}
-        </ul>
+      </div>
+      <div class="h-full p-6 md:w-1/3">
+        {#each product.options as option}
+          <div class="mb-8">
+            <div class="mb-4 text-sm uppercase tracking-wide">{option.name}</div>
+            <div class="flex">
+              {#each option.values as value}
+                <button
+                  on:click={() => {
+                    selectedOptions = { ...selectedOptions, [option.name]: value };
+                  }}
+                  class={`${value.length <= 3 ? 'w-12' : 'px-2'} ${
+                    selectedOptions[option.name] === value ? 'opacity-100' : 'opacity-60'
+                  } transition duration-300 ease-in-out hover:scale-110 hover:opacity-100 border-white h-12 mr-3 flex items-center justify-center rounded-full border`}
+                >
+                  {value}
+                </button>
+              {/each}
+            </div>
+          </div>
+        {/each}
+        <p class="text-sm">{product.description}</p>
+        <div class="mt-8 flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="mr-1">
+              <Icons type="star" />
+            </div>
+            <div class="mr-1">
+              <Icons type="star" />
+            </div>
+            <div class="mr-1">
+              <Icons type="star" />
+            </div>
+            <div class="mr-1">
+              <Icons type="star" />
+            </div>
+            <div class="mr-1 opacity-50">
+              <Icons type="star" />
+            </div>
+          </div>
+          <div class="text-sm opacity-50">36 Reviews</div>
+        </div>
+        <button
+          on:click={addToCart}
+          class="mt-6 flex w-full items-center justify-center bg-white p-4 text-sm uppercase tracking-wide text-black opacity-90 hover:opacity-100"
+        >
+          <span>Add To Cart</span>
+          {#if cartLoading}
+            <div class="lds-ring ml-4">
+              <div />
+              <div />
+              <div />
+              <div />
+            </div>
+          {/if}
+        </button>
+        <DescriptionToggle
+          title="Care"
+          description="This is a limited edition production run. Printing starts when the drop ends."
+        />
+        <DescriptionToggle
+          title="Details"
+          description="This is a limited edition production run. Printing starts when the drop ends. Reminder: Bad Boys For Life. Shipping may take 10+ days due to COVID-19."
+        />
+      </div>
     </div>
-    {/if}
+    <div class="px-4 py-8">
+      <div class="mb-4 text-3xl font-bold">Related Products</div>
+      <ul class="grid grid-flow-row grid-cols-2 gap-4 md:grid-cols-4">
+        {#each featuredProducts as product, i (product.node.id)}
+          <li>
+            <div
+              class="group relative block aspect-square overflow-hidden border border-white/20 bg-zinc-800/50"
+            >
+              <a sveltekit:prefetch href={`/product/${product.node.handle}`}>
+                <GridTile
+                  removeLabels={true}
+                  imageSrc={product.node.images.edges[0].node.originalSrc}
+                />
+              </a>
+            </div>
+          </li>
+        {/each}
+      </ul>
+    </div>
+  {/if}
 </div>
 
 <style>
-    .lds-ring {
+  .lds-ring {
     display: inline-block;
     position: relative;
     width: 20px;
     height: 20px;
-    }
-    .lds-ring div {
+  }
+  .lds-ring div {
     box-sizing: border-box;
     display: block;
     position: absolute;
@@ -177,22 +226,22 @@
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     border-color: #000 transparent transparent transparent;
-    }
-    .lds-ring div:nth-child(1) {
+  }
+  .lds-ring div:nth-child(1) {
     animation-delay: -0.45s;
-    }
-    .lds-ring div:nth-child(2) {
+  }
+  .lds-ring div:nth-child(2) {
     animation-delay: -0.3s;
-    }
-    .lds-ring div:nth-child(3) {
+  }
+  .lds-ring div:nth-child(3) {
     animation-delay: -0.15s;
-    }
-    @keyframes lds-ring {
+  }
+  @keyframes lds-ring {
     0% {
-        transform: rotate(0deg);
+      transform: rotate(0deg);
     }
     100% {
-        transform: rotate(360deg);
+      transform: rotate(360deg);
     }
-    }
+  }
 </style>
