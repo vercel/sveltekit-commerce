@@ -46,7 +46,7 @@
 
 <div
   on:click|self
-  class="absolute inset-0 z-50 z-50 flex max-h-screen w-full justify-end overflow-hidden bg-black/50"
+  class="absolute inset-0 z-50 flex max-h-screen w-full justify-end overflow-hidden bg-black/50"
 >
   <div class="z-50 w-full bg-black p-6 md:w-1/2 lg:w-1/3">
     <div class="mb-6 flex w-full items-center justify-between">
@@ -58,7 +58,7 @@
         <div class="flex h-16 w-16 items-center justify-center rounded-full bg-white">
           <Icons type="cart" strokeColor="#000" />
         </div>
-        <div class="mt-6 text-center text-center text-2xl font-bold">Your cart is empty.</div>
+        <div class="mt-6 text-center text-2xl font-bold">Your cart is empty.</div>
       </div>
     {/if}
     <div class="overflow-y-auto" style="height: 80%;">
