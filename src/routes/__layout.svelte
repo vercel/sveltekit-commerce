@@ -8,13 +8,17 @@
 
   let cartId;
   let checkoutUrl;
+  let cartCreatedAt;
   let cartItems = [];
 
   onMount(async () => {
     if (typeof window !== 'undefined') {
       cartId = JSON.parse(localStorage.getItem('cartId'));
+      cartCreatedAt = JSON.parse(localStorage.getItem('cartCreatedAt'));
       checkoutUrl = JSON.parse(localStorage.getItem('cartUrl'));
-      if (!cartId) {
+      let currentDate = Date.now();
+      let cartIdExpired = currentDate-cartCreatedAt > (1000*60*60*24*7);
+      if (!cartId || cartIdExpired) {
         await createCart();
       }
       await loadCart();
@@ -26,6 +30,7 @@
     });
     const cart = await cartRes.json();
     if (typeof window !== 'undefined') {
+      localStorage.setItem('cartCreatedAt', Date.now());
       localStorage.setItem('cartId', JSON.stringify(cart?.data?.cartCreate?.cart?.id));
       localStorage.setItem('cartUrl', JSON.stringify(cart?.data?.cartCreate?.cart?.checkoutUrl));
     }
