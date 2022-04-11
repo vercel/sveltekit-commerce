@@ -9,7 +9,6 @@
 
   $: currentRoute = $page.url.pathname;
 
-  let numberOfItemsInBasket = 0;
   let showMenu = false;
 
   let tabs = [
@@ -25,7 +24,7 @@
 
 <nav class="flex items-center border-b border-zinc-700 p-4 lg:px-6">
   <div class="flex w-1/3 items-center">
-    <div class="mr-4" sveltekit:prefetch class:active={currentRoute === '/'}>
+    <div class="mr-4" class:active={currentRoute === '/'}>
       <a href="/" sveltekit:prefetch class="">
         <picture>
           <source srcset="/svelte_logo.png" type="image/png" />

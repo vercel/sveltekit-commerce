@@ -5,6 +5,7 @@
   import ShoppingCart from '$lib/ShoppingCart.svelte';
   import { getCartItems } from '../store';
   import { onMount } from 'svelte';
+  import {api} from '$lib/utils/api.js';
 
   let cartId;
   let checkoutUrl;
@@ -25,14 +26,23 @@
     }
   });
   async function createCart() {
-    const cartRes = await fetch('/createCart.json', {
-      method: 'POST'
+    const cartRes = await api({
+      query: `
+        mutation calculateCart($lineItems: [CartLineInput!]) {
+          cartCreate(input: { lines: $lineItems }) {
+            cart {
+              checkoutUrl
+              id
+            }
+          }
+        }
+      `,
+      variables: {}
     });
-    const cart = await cartRes.json();
     if (typeof window !== 'undefined') {
       localStorage.setItem('cartCreatedAt', Date.now());
-      localStorage.setItem('cartId', JSON.stringify(cart?.data?.cartCreate?.cart?.id));
-      localStorage.setItem('cartUrl', JSON.stringify(cart?.data?.cartCreate?.cart?.checkoutUrl));
+      localStorage.setItem('cartId', JSON.stringify(cartRes.body?.data?.cartCreate?.cart?.id));
+      localStorage.setItem('cartUrl', JSON.stringify(cartRes.body?.data?.cartCreate?.cart?.checkoutUrl));
     }
   }
   async function loadCart() {

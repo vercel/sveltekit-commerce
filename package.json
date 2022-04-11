@@ -2,6 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "cypress": "cypress",
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
     "package": "svelte-kit package",
@@ -18,6 +19,7 @@
     "@sveltejs/adapter-auto": "next",
     "@sveltejs/kit": "next",
     "autoprefixer": "10.4.2",
+    "cypress": "^9.5.3",
     "eslint-config-prettier": "8.4.0",
     "postcss-load-config": "3.1.3",
     "prettier": "2.5.1",

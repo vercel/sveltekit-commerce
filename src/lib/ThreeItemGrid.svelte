@@ -8,9 +8,7 @@
 <div class="flex flex-col lg:h-full lg:flex-row">
   <div class="h-[60vh] w-full bg-violet-700 lg:h-full lg:w-2/3">
     <GridTile
-      on:click={() => {
-        goto(`/product/${products[0].node.handle}`);
-      }}
+      href={`/product/${products[0].node.handle}`}
       title={products[0].node.title}
       price={products[0].node.priceRange.maxVariantPrice.amount}
       currencyCode={products[0].node.priceRange.maxVariantPrice.currencyCode}
