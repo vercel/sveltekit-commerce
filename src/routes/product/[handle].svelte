@@ -1,85 +1,18 @@
 <script context="module">
   import {api} from '$lib/utils/api.js';
-  export async function load({ params, fetch }) {
+  import {getProduct, getAllProducts, addItemToCart} from '$lib/utils/models.js';
+  export async function load({ params }) {
     const response = await api({
-    query: ` 
-      query getProduct($handle: String!) {
-        productByHandle(handle: $handle) {
-          id
-          handle
-          availableForSale
-          title
-          description
-          descriptionHtml
-          options {
-            id
-            name
-            values
-          }
-          priceRange {
-            maxVariantPrice {
-              amount
-              currencyCode
-            }
-            minVariantPrice {
-              amount
-              currencyCode
-            }
-          }
-          variants(first: 250) {
-            pageInfo {
-              hasNextPage
-              hasPreviousPage
-            }
-            edges {
-              node {
-                id
-                title
-                sku
-                availableForSale
-                requiresShipping
-                selectedOptions {
-                  name
-                  value
-                }
-                priceV2 {
-                  amount
-                  currencyCode
-                }
-                compareAtPriceV2 {
-                  amount
-                  currencyCode
-                }
-              }
-            }
-          }
-          images(first: 20) {
-            pageInfo {
-              hasNextPage
-              hasPreviousPage
-            }
-            edges {
-              node {
-                originalSrc
-                altText
-                width
-                height
-              }
-            }
-          }
-        }
+      query: getProduct,
+      variables: {
+        handle: params.handle
       }
-    `,
-    variables: {
-      handle: params.handle
-    }
-  });
-  let product = response.body?.data?.productByHandle;
-  console.log(product)
-
-    const productsRes = await fetch('/search/getAllProducts.json');
-    const allProducts = await productsRes.json();
-    const featuredProducts = allProducts.data.products.edges.slice(0, 4);
+    });
+    let product = response.body?.data?.productByHandle;
+    const productsRes = await api({
+      query: getAllProducts
+    });
+    const featuredProducts = productsRes?.body?.data?.products?.edges?.slice(0, 4);
 
     return {
       props: { product, featuredProducts }
@@ -94,7 +27,7 @@
   import { getCartItems } from '../../store.js';
   export let product;
   export let featuredProducts;
-  console.log(featuredProducts);
+
   let selectedOptions = {};
   let cartLoading = false;
   let currentImageIndex = 0;
@@ -133,20 +66,26 @@
         variantId = variant.node.id;
       }
     });
-    await fetch('/addToCart.json', {
-      method: 'POST',
-      body: JSON.stringify({ cartId: cartId, variantId: variantId })
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((res) => {
-        console.log(res);
-      });
+    await api({
+      query: addItemToCart,
+      variables: {
+        cartId: cartId,
+        lines: [
+          {
+            merchandiseId: variantId,
+            quantity: 1
+          }
+        ]
+      }
+    });
     await getCartItems();
     cartLoading = false;
   }
 </script>
+
+<svelte:head>
+  <title>{product.title}</title>
+</svelte:head>
 
 <div>
   {#if product}

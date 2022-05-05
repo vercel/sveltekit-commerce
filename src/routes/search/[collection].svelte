@@ -1,18 +1,14 @@
 <script context="module">
-  export async function load({ fetch }) {
-    const res = await fetch('/getAllCollections.json');
-    if (res.ok) {
-      const result = await res.json();
-      const collections = result.data.collections.edges;
+  import {api} from '$lib/utils/api.js';
+  import { getCollections } from '$lib/utils/models.js';
 
-      return {
-        props: { collections }
-      };
-    }
-    const { message } = await res.json();
-
+  export async function load() {
+    const response = await api({
+      query: getCollections
+    });
+    const collections = response?.body?.data?.collections?.edges;
     return {
-      error: new Error(message)
+      props: { collections }
     };
   }
 </script>
@@ -27,8 +23,12 @@
       collection = d.node;
     }
   });
-  console.log(collection);
+  
 </script>
+
+<svelte:head>
+  <title>{collection?.handle} collection</title>
+</svelte:head>
 
 <div>
   {#if collection}
@@ -36,14 +36,13 @@
       {#each collection.products.edges as product, i (i)}
         <li>
           <div class="group relative block aspect-square overflow-hidden bg-zinc-800">
-            <a sveltekit:prefetch href={`/product/${product.node.handle}`}>
-              <GridTile
+            <GridTile
                 title={product.node.title}
+                href={`/product/${product.node.handle}`}
                 price={product.node.priceRange.maxVariantPrice.amount}
                 currencyCode={product.node.priceRange.maxVariantPrice.currencyCode}
                 imageSrc={product.node.images.edges[0].node.originalSrc}
               />
-            </a>
           </div>
         </li>
       {/each}

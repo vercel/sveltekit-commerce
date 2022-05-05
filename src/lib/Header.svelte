@@ -53,6 +53,7 @@
     <button on:click={openCart} class="relative mr-4">
       <Icons strokeColor="#fff" type="cart" />
       <div
+        data-test="cart-quantity"
         class="absolute bottom-0 left-0 -ml-3 -mb-3 flex h-5 w-5 items-center justify-center rounded-full border border-black bg-white text-xs text-black"
       >
         {$cartQuantity}

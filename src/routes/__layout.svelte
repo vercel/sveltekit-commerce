@@ -6,6 +6,7 @@
   import { getCartItems } from '../store';
   import { onMount } from 'svelte';
   import {api} from '$lib/utils/api.js';
+  import { updateCart, calculateCart, addItemToCart } from '$lib/utils/models.js';
 
   let cartId;
   let checkoutUrl;
@@ -27,16 +28,7 @@
   });
   async function createCart() {
     const cartRes = await api({
-      query: `
-        mutation calculateCart($lineItems: [CartLineInput!]) {
-          cartCreate(input: { lines: $lineItems }) {
-            cart {
-              checkoutUrl
-              id
-            }
-          }
-        }
-      `,
+      query: calculateCart,
       variables: {}
     });
     if (typeof window !== 'undefined') {
@@ -66,25 +58,33 @@
   }
 
   async function addToCart(event) {
-    await fetch('/addToCart.json', {
-      method: 'POST',
-      body: JSON.stringify({ cartId: cartId, variantId: event.detail.body })
+    await api({
+      query: addItemToCart,
+      variables: {
+        cartId: cartId,
+        lines: [
+          {
+            merchandiseId: event?.detail?.body,
+            quantity: 1
+          }
+        ]
+      }
     });
     loadCart();
   }
   async function removeProduct(event) {
-    console.log(event);
-    let variantId = event.detail.body.variantId;
-    let quantity = event.detail.body.quantity;
-    let lineId = event.detail.body.lineId;
-    await fetch('/updateCart.json', {
-      method: 'POST',
-      body: JSON.stringify({
+    await api({
+      query: updateCart,
+      variables: {
         cartId: cartId,
-        variantId: variantId,
-        quantity: quantity,
-        lineId: lineId
-      })
+        lines: [
+          {
+            id: event?.detail?.body?.lineId,
+            merchandiseId: event?.detail?.body?.variantId,
+            quantity: event?.detail?.body?.quantity
+          }
+        ]
+      }
     });
     loadCart();
   }

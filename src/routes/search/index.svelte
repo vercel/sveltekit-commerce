@@ -1,19 +1,14 @@
 <script context="module">
-  export async function load({ fetch }) {
-    const res = await fetch('/search/getAllProducts.json');
+  import {api} from '$lib/utils/api.js';
+  import {getAllProducts} from '$lib/utils/models.js';
 
-    if (res.ok) {
-      const result = await res.json();
-      const allProducts = result.data.products;
-
-      return {
-        props: { allProducts }
-      };
-    }
-    const { message } = await res.json();
-
+  export async function load() {
+    const response = await api({
+      query: getAllProducts
+    });
+    const allProducts = response?.body?.data?.products?.edges;
     return {
-      error: new Error(message)
+      props: { allProducts }
     };
   }
 </script>
@@ -22,8 +17,8 @@
   import GridTile from '$lib/GridTile.svelte';
   export let allProducts;
   import { search } from '../../store.js';
-
-  $: searchedItems = allProducts.edges.filter((item) => {
+  
+  $: searchedItems = allProducts?.filter((item) => {
     if (item.node.title.toLowerCase().includes($search.toLowerCase())) {
       return item;
     }
@@ -39,14 +34,13 @@
     {#each displayedProducts as product, i (product.node.id)}
       <li>
         <div class="group relative block aspect-square overflow-hidden bg-zinc-800">
-          <a sveltekit:prefetch href={`/product/${product.node.handle}`}>
-            <GridTile
+          <GridTile
               title={product.node.title}
+              href={`/product/${product.node.handle}`}
               price={product.node.priceRange.maxVariantPrice.amount}
               currencyCode={product.node.priceRange.maxVariantPrice.currencyCode}
               imageSrc={product.node.images.edges[0].node.originalSrc}
             />
-          </a>
         </div>
       </li>
     {/each}

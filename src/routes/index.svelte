@@ -1,20 +1,15 @@
 <script context="module">
+  import {api} from '$lib/utils/api.js';
+  import {getCollections} from '$lib/utils/models.js';
   export async function load({ fetch }) {
-    const res = await fetch('/getAllCollections.json');
-    if (res.ok) {
-      const result = await res.json();
-      const collections = result?.data?.collections?.edges;
-
-      return {
-        props: { collections }
-      };
-    }
-    const { message } = await res.json();
-
+    const response = await api({
+      query: getCollections
+    });
+    const collections = response?.body?.data?.collections?.edges;
     return {
-      error: new Error(message)
+      props: { collections }
     };
-  }
+}
 </script>
 
 <script>
