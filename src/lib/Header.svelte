@@ -29,7 +29,7 @@
       <a href="/" sveltekit:prefetch class="">
         <picture>
           <source srcset="/svelte_logo.png" type="image/png" />
-          <img src="/svelte_logo.png" alt="Svelte Logo" class="h-8" />
+          <img src="/svelte_logo.png" alt="Svelte Logo" height={32} width="100%" class="h-8" />
         </picture>
       </a>
     </div>
@@ -51,7 +51,7 @@
     <SearchBar />
   </div>
   <div class="ml-auto flex items-center">
-    <button on:click={openCart} class="relative mr-4">
+    <button on:click={openCart} class="relative my-2 mx-4">
       <Icons strokeColor="#fff" type="cart" />
       <div
         class="absolute bottom-0 left-0 -ml-3 -mb-3 flex h-5 w-5 items-center justify-center rounded-full border border-black bg-white text-xs text-black"
@@ -63,6 +63,7 @@
       on:click={() => {
         showMenu = true;
       }}
+      aria-label="Open menu"
       class="lg:hidden"
     >
       <Icons type="menu" />
@@ -78,6 +79,7 @@
       <div class="z-30 w-full bg-black p-6 md:w-1/2 lg:w-1/3">
         <div class="flex w-full items-center justify-between">
           <button
+            aria-label="Close menu"
             on:click={() => {
               showMenu = false;
             }}
