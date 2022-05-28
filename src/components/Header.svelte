@@ -1,8 +1,8 @@
 <script>
   import { page } from '$app/stores';
-  import Icons from '$lib/Icons.svelte';
+  import Icons from '$components/Icons.svelte';
   import { cartQuantity } from '../store';
-  import SearchBar from '$lib/SearchBar.svelte';
+  import SearchBar from '$components/SearchBar.svelte';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();

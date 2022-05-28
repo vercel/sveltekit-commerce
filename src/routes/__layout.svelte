@@ -1,8 +1,8 @@
 <script>
   import '../app.css';
-  import Header from '$lib/Header.svelte';
-  import Footer from '$lib/Footer.svelte';
-  import ShoppingCart from '$lib/ShoppingCart.svelte';
+  import Header from '$components/Header.svelte';
+  import Footer from '$components/Footer.svelte';
+  import ShoppingCart from '$components/ShoppingCart.svelte';
   import { getCartItems } from '../store';
   import { onMount } from 'svelte';
 
@@ -16,6 +16,7 @@
       cartId = JSON.parse(localStorage.getItem('cartId'));
       cartCreatedAt = JSON.parse(localStorage.getItem('cartCreatedAt'));
       checkoutUrl = JSON.parse(localStorage.getItem('cartUrl'));
+
       let currentDate = Date.now();
       let cartIdExpired = currentDate-cartCreatedAt > (1000*60*60*24*7);
       if (!cartId || cartIdExpired) {
@@ -24,17 +25,20 @@
       await loadCart();
     }
   });
+
   async function createCart() {
-    const cartRes = await fetch('/createCart.json', {
+    const cartRes = await fetch('/cart.json', {
       method: 'POST'
     });
     const cart = await cartRes.json();
+
     if (typeof window !== 'undefined') {
       localStorage.setItem('cartCreatedAt', Date.now());
       localStorage.setItem('cartId', JSON.stringify(cart?.data?.cartCreate?.cart?.id));
       localStorage.setItem('cartUrl', JSON.stringify(cart?.data?.cartCreate?.cart?.checkoutUrl));
     }
   }
+
   async function loadCart() {
     const res = await getCartItems();
     cartItems = res?.body?.data?.cart?.lines?.edges;
@@ -42,6 +46,7 @@
 
   let showCart = false;
   let loading = false;
+
   function openCart() {
     loadCart();
     showCart = true;
@@ -56,24 +61,21 @@
   }
 
   async function addToCart(event) {
-    await fetch('/addToCart.json', {
-      method: 'POST',
+    await fetch('/cart.json', {
+      method: 'PATCH',
       body: JSON.stringify({ cartId: cartId, variantId: event.detail.body })
     });
     loadCart();
   }
+
   async function removeProduct(event) {
-    console.log(event);
-    let variantId = event.detail.body.variantId;
-    let quantity = event.detail.body.quantity;
-    let lineId = event.detail.body.lineId;
-    await fetch('/updateCart.json', {
-      method: 'POST',
+    await fetch('/cart.json', {
+      method: 'PUT',
       body: JSON.stringify({
-        cartId: cartId,
-        variantId: variantId,
-        quantity: quantity,
-        lineId: lineId
+        cartId,
+        lineId: event.detail.body.lineId,
+        quantity: event.detail.body.quantity,
+        variantId: event.detail.body.variantId,
       })
     });
     loadCart();

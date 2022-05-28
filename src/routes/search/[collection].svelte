@@ -1,33 +1,15 @@
-<script context="module">
-  export async function load({ fetch }) {
-    const res = await fetch('/getAllCollections.json');
-    if (res.ok) {
-      const result = await res.json();
-      const collections = result.data.collections.edges;
-
-      return {
-        props: { collections }
-      };
-    }
-    const { message } = await res.json();
-
-    return {
-      error: new Error(message)
-    };
-  }
-</script>
-
 <script>
-  import GridTile from '$lib/GridTile.svelte';
+  import GridTile from '$components/GridTile.svelte';
   import { page } from '$app/stores';
+
   export let collections = [];
   let collection;
+
   $: collections.forEach((d) => {
     if (d.node.handle === $page?.params?.collection) {
       collection = d.node;
     }
   });
-  console.log(collection);
 </script>
 
 <div>

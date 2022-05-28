@@ -1,33 +1,15 @@
-<script context="module">
-  export async function load({ fetch }) {
-    const res = await fetch('/search/getAllProducts.json');
-
-    if (res.ok) {
-      const result = await res.json();
-      const allProducts = result.data.products;
-
-      return {
-        props: { allProducts }
-      };
-    }
-    const { message } = await res.json();
-
-    return {
-      error: new Error(message)
-    };
-  }
-</script>
-
 <script>
-  import GridTile from '$lib/GridTile.svelte';
-  export let allProducts;
+  import GridTile from '$components/GridTile.svelte';
   import { search } from '../../store.js';
+
+  export let allProducts;
 
   $: searchedItems = allProducts.edges.filter((item) => {
     if (item.node.title.toLowerCase().includes($search.toLowerCase())) {
       return item;
     }
   });
+  
   let displayedProducts = allProducts.edges;
   $: if (searchedItems.length > 0) {
     displayedProducts = searchedItems;

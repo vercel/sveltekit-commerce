@@ -1,5 +1,5 @@
 <script>
-  import GridTile from '$lib/GridTile.svelte';
+  import GridTile from '$components/GridTile.svelte';
   import { goto } from '$app/navigation';
 
   export let products;

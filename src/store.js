@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { api } from './routes/_shopifyApi.js';
+import { shopifyFetch } from './utils/shopify.js';
 
 export const cartQuantity = writable('');
 export const cart = writable([]);
@@ -9,7 +9,7 @@ export const getCartItems = async () => {
   let cartId = JSON.parse(localStorage.getItem('cartId'));
 
   try {
-    const shopifyResponse = await api({
+    const shopifyResponse = await shopifyFetch({
       query: `
         query GetCart($cartId: ID!) {
           cart(id: $cartId) {

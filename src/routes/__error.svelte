@@ -1,5 +1,5 @@
 <script>
-  import Icons from '$lib/Icons.svelte';
+  import Icons from '$components/Icons.svelte';
 </script>
 
 <div class="flex h-screen flex-col items-center justify-center ">

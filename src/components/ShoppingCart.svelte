@@ -1,6 +1,4 @@
 <script>
-  import { cart } from '../store';
-  import { api } from '../routes/_shopifyApi.js';
   import Icons from './Icons.svelte';
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();

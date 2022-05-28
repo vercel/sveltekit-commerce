@@ -1,33 +1,14 @@
-<script context="module">
-  export async function load({ fetch }) {
-    const res = await fetch('/getAllCollections.json');
-    if (res.ok) {
-      const result = await res.json();
-      const collections = result?.data?.collections?.edges;
-
-      return {
-        props: { collections }
-      };
-    }
-    const { message } = await res.json();
-
-    return {
-      error: new Error(message)
-    };
-  }
-</script>
-
 <script>
-  import ThreeItemGrid from '$lib/ThreeItemGrid.svelte';
-  import Carousel from '$lib/Carousel.svelte';
+  import ThreeItemGrid from '$components/ThreeItemGrid.svelte';
+  import Carousel from '$components/Carousel.svelte';
 
-  export let collections = [];
-  $: clothesCollection = collections[0]?.node?.products?.edges;
-  $: featuredCollection = collections[1]?.node?.products?.edges;
+  export let products;
+  $: clothesCollection = products[0]?.node?.products?.edges;
+  $: featuredCollection = products[1]?.node?.products?.edges;
 </script>
 
 <svelte:head>
-  <title>Home</title>
+  <title>Home – SvelteKit Commerce</title>
 </svelte:head>
 
 <main>
