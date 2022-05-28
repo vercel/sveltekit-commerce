@@ -42,7 +42,7 @@
       stroke-linejoin="round"
       fill="none"
       shape-rendering="geometricPrecision"
-      class="h-6 w-6 hover:text-accent-3"><path d="M18 6L6 18" /><path d="M6 6l12 12" /></svg
+      class="hover:text-accent-3 h-6 w-6"><path d="M18 6L6 18" /><path d="M6 6l12 12" /></svg
     >
   {:else if type === 'minus'}
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none"

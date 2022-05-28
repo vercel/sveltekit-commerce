@@ -6,11 +6,11 @@
 
   export let product;
   export let featuredProducts;
-  
+
   let selectedOptions = {};
   let cartLoading = false;
   let currentImageIndex = 0;
-  
+
   $: highlightedImageSrc = product?.images?.edges[currentImageIndex]?.node?.originalSrc;
   product?.options.forEach((option) => {
     selectedOptions = { ...selectedOptions, [option.name]: option.values[0] };
@@ -53,10 +53,10 @@
     await fetch('/cart.json', {
       method: 'PATCH',
       body: JSON.stringify({ cartId: cartId, variantId: variantId })
-    })
+    });
     // Wait for the API to finish before updating cart items
-    await getCartItems()
-    
+    await getCartItems();
+
     cartLoading = false;
   }
 </script>

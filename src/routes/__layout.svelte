@@ -18,7 +18,7 @@
       checkoutUrl = JSON.parse(localStorage.getItem('cartUrl'));
 
       let currentDate = Date.now();
-      let cartIdExpired = currentDate-cartCreatedAt > (1000*60*60*24*7);
+      let cartIdExpired = currentDate - cartCreatedAt > 1000 * 60 * 60 * 24 * 7;
       if (!cartId || cartIdExpired) {
         await createCart();
       }
@@ -75,7 +75,7 @@
         cartId,
         lineId: event.detail.body.lineId,
         quantity: event.detail.body.quantity,
-        variantId: event.detail.body.variantId,
+        variantId: event.detail.body.variantId
       })
     });
     loadCart();

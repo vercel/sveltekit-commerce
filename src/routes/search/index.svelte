@@ -9,7 +9,7 @@
       return item;
     }
   });
-  
+
   let displayedProducts = allProducts.edges;
   $: if (searchedItems.length > 0) {
     displayedProducts = searchedItems;
