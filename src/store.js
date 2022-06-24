@@ -1,22 +1,71 @@
 import { writable } from 'svelte/store';
-import { api } from '$lib/utils/api.js';
-import { getCart } from '$lib/utils/models.js';
+import { shopifyFetch } from './utils/shopify.js';
+import { loadCart } from '$utils/shopify';
 
 export const cartQuantity = writable('');
 export const cart = writable([]);
-
 export const search = writable('');
 
 export const getCartItems = async () => {
   let cartId = JSON.parse(localStorage.getItem('cartId'));
 
   try {
-    const shopifyResponse = await api({
-      query: getCart,
-      variables: { cartId }
-    });
+    const shopifyResponse = await loadCart(cartId);
+    // const shopifyResponse = await shopifyFetch({
+    //   query: `
+    //     query GetCart($cartId: ID!) {
+    //       cart(id: $cartId) {
+    //         checkoutUrl
+    //           estimatedCost {
+    //               totalAmount {
+    //               amount
+    //               }
+    //           }
+    //           lines(first: 100) {
+    //               edges {
+    //               node {
+    //                   id
+    //                   quantity
+    //                   estimatedCost {
+    //                   subtotalAmount {
+    //                       amount
+    //                       currencyCode
+    //                   }
+    //                   totalAmount {
+    //                       amount
+    //                       currencyCode
+    //                   }
+    //                   }
+    //                   merchandise {
+    //                   ... on ProductVariant {
+    //                       id
+    //                       title
+    //                       product {
+    //                           images(first: 1) {
+    //                               edges {
+    //                                 node {
+    //                                   originalSrc
+    //                                   altText
+    //                                   width
+    //                                   height
+    //                                 }
+    //                               }
+    //                             }
+    //                           title
+    //                       }
+    //                   }
+    //                   }
+    //               }
+    //               }
+    //           }
+    //         }
+    //     }
+    //   `,
+    //   variables: { cartId }
+    // });
+
     let sum = 0;
-    shopifyResponse.body.data.cart.lines.edges.forEach((d) => {
+    shopifyResponse.body?.data?.cart?.lines?.edges?.forEach((d) => {
       sum += d.node.quantity;
     });
     cartQuantity.set(sum);

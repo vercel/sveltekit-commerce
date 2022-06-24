@@ -1,29 +1,15 @@
-<script context="module">
-  import {api} from '$lib/utils/api.js';
-  import { getCollections } from '$lib/utils/models.js';
-
-  export async function load() {
-    const response = await api({
-      query: getCollections
-    });
-    const collections = response?.body?.data?.collections?.edges;
-    return {
-      props: { collections }
-    };
-  }
-</script>
-
 <script>
-  import GridTile from '$lib/GridTile.svelte';
+  import GridTile from '$components/GridTile.svelte';
   import { page } from '$app/stores';
+
   export let collections = [];
   let collection;
+
   $: collections.forEach((d) => {
     if (d.node.handle === $page?.params?.collection) {
       collection = d.node;
     }
   });
-  
 </script>
 
 <svelte:head>
@@ -37,12 +23,12 @@
         <li>
           <div class="group relative block aspect-square overflow-hidden bg-zinc-800">
             <GridTile
-                title={product.node.title}
-                href={`/product/${product.node.handle}`}
-                price={product.node.priceRange.maxVariantPrice.amount}
-                currencyCode={product.node.priceRange.maxVariantPrice.currencyCode}
-                imageSrc={product.node.images.edges[0].node.originalSrc}
-              />
+              href={`/product/${product?.node?.handle}`}
+              title={product?.node?.title}
+              price={product?.node?.priceRange?.maxVariantPrice?.amount}
+              currencyCode={product?.node?.priceRange?.maxVariantPrice?.currencyCode}
+              imageSrc={product?.node?.images?.edges[0].node?.originalSrc}
+            />
           </div>
         </li>
       {/each}

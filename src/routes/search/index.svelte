@@ -1,28 +1,15 @@
-<script context="module">
-  import {api} from '$lib/utils/api.js';
-  import {getAllProducts} from '$lib/utils/models.js';
-
-  export async function load() {
-    const response = await api({
-      query: getAllProducts
-    });
-    const allProducts = response?.body?.data?.products?.edges;
-    return {
-      props: { allProducts }
-    };
-  }
-</script>
-
 <script>
-  import GridTile from '$lib/GridTile.svelte';
-  export let allProducts;
+  import GridTile from '$components/GridTile.svelte';
   import { search } from '../../store.js';
-  
-  $: searchedItems = allProducts?.filter((item) => {
+
+  export let allProducts;
+
+  $: searchedItems = allProducts.edges.filter((item) => {
     if (item.node.title.toLowerCase().includes($search.toLowerCase())) {
       return item;
     }
   });
+
   let displayedProducts = allProducts.edges;
   $: if (searchedItems.length > 0) {
     displayedProducts = searchedItems;

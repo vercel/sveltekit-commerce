@@ -1,12 +1,11 @@
 <script>
   import '../app.css';
-  import Header from '$lib/Header.svelte';
-  import Footer from '$lib/Footer.svelte';
-  import ShoppingCart from '$lib/ShoppingCart.svelte';
+  import Header from '$components/Header.svelte';
+  import Footer from '$components/Footer.svelte';
+  import ShoppingCart from '$components/ShoppingCart.svelte';
   import { getCartItems } from '../store';
   import { onMount } from 'svelte';
-  import {api} from '$lib/utils/api.js';
-  import { updateCart, calculateCart, addItemToCart } from '$lib/utils/models.js';
+  import { createCart } from '$utils/shopify';
 
   let cartId;
   let checkoutUrl;
@@ -18,25 +17,29 @@
       cartId = JSON.parse(localStorage.getItem('cartId'));
       cartCreatedAt = JSON.parse(localStorage.getItem('cartCreatedAt'));
       checkoutUrl = JSON.parse(localStorage.getItem('cartUrl'));
+
       let currentDate = Date.now();
-      let cartIdExpired = currentDate-cartCreatedAt > (1000*60*60*24*7);
-      if (!cartId || cartIdExpired) {
-        await createCart();
+      let cartIdExpired = currentDate - cartCreatedAt > 1000 * 60 * 60 * 24 * 7;
+      if (cartId === 'undefined' || cartId === 'null' || cartIdExpired) {
+        await callCreateCart();
       }
       await loadCart();
     }
   });
-  async function createCart() {
-    const cartRes = await api({
-      query: calculateCart,
-      variables: {}
-    });
+
+  async function callCreateCart() {
+    // const cartRes = await fetch('/cart.json', {
+    //   method: 'POST'
+    // });
+    const cartRes = await createCart();
+
     if (typeof window !== 'undefined') {
       localStorage.setItem('cartCreatedAt', Date.now());
       localStorage.setItem('cartId', JSON.stringify(cartRes.body?.data?.cartCreate?.cart?.id));
       localStorage.setItem('cartUrl', JSON.stringify(cartRes.body?.data?.cartCreate?.cart?.checkoutUrl));
     }
   }
+
   async function loadCart() {
     const res = await getCartItems();
     cartItems = res?.body?.data?.cart?.lines?.edges;
@@ -44,8 +47,9 @@
 
   let showCart = false;
   let loading = false;
-  function openCart() {
-    loadCart();
+
+  async function openCart() {
+    await loadCart();
     showCart = true;
   }
   function hideCart() {
@@ -58,35 +62,25 @@
   }
 
   async function addToCart(event) {
-    await api({
-      query: addItemToCart,
-      variables: {
-        cartId: cartId,
-        lines: [
-          {
-            merchandiseId: event?.detail?.body,
-            quantity: 1
-          }
-        ]
-      }
+    await fetch('/cart.json', {
+      method: 'PATCH',
+      body: JSON.stringify({ cartId: cartId, variantId: event.detail.body })
     });
-    loadCart();
+    // Wait for the API to finish before updating cart items
+    await loadCart();
   }
+
   async function removeProduct(event) {
-    await api({
-      query: updateCart,
-      variables: {
-        cartId: cartId,
-        lines: [
-          {
-            id: event?.detail?.body?.lineId,
-            merchandiseId: event?.detail?.body?.variantId,
-            quantity: event?.detail?.body?.quantity
-          }
-        ]
-      }
+    await fetch('/cart.json', {
+      method: 'PUT',
+      body: JSON.stringify({
+        cartId,
+        lineId: event.detail.body.lineId,
+        quantity: event.detail.body.quantity,
+        variantId: event.detail.body.variantId
+      })
     });
-    loadCart();
+    await loadCart();
   }
 </script>
 
