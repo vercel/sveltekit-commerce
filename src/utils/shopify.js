@@ -199,6 +199,7 @@ export async function loadCart(cartId) {
               lines(first: 100) {
                   edges {
                   node {
+                      id
                       quantity
                       estimatedCost {
                       subtotalAmount {
