@@ -2,7 +2,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "cypress": "cypress",
     "dev": "svelte-kit dev",
     "build": "svelte-kit build",
     "preview": "svelte-kit preview",
