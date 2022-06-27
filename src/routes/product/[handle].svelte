@@ -39,7 +39,6 @@
 
     if (typeof window !== 'undefined') {
       cartId = JSON.parse(localStorage.getItem('cartId'));
-      console.log(cartId)
     }
 
     product.variants.edges.forEach((variant) => {

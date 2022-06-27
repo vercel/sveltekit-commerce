@@ -28,9 +28,6 @@
   });
 
   async function callCreateCart() {
-    // const cartRes = await fetch('/cart.json', {
-    //   method: 'POST'
-    // });
     const cartRes = await createCart();
 
     if (typeof window !== 'undefined') {
