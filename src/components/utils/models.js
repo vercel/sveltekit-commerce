@@ -1,5 +1,5 @@
 const product = `
-id
+    id
     handle
     availableForSale
     title
