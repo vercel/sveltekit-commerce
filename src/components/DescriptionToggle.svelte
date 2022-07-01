@@ -1,5 +1,5 @@
 <script>
-  import Icons from '$lib/Icons.svelte';
+  import Icons from '$components/Icons.svelte';
   import { fade } from 'svelte/transition';
 
   export let title;

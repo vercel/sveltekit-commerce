@@ -1,6 +1,4 @@
 <script>
-  import { cart } from '../store';
-  import { api } from '../routes/_shopifyApi.js';
   import Icons from './Icons.svelte';
   import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
@@ -32,15 +30,8 @@
   }
   async function checkout() {
     loading = true;
-    let lineItems = items.map((d) => {
-      return {
-        quantity: d.quantity,
-        merchandiseId: d.variantId
-      };
-    });
-    dispatch('getCheckoutUrl', {
-      body: lineItems
-    });
+    let checkoutUrl = localStorage.getItem('cartUrl');
+    window.open(JSON.parse(checkoutUrl), '_blank');
   }
 </script>
 

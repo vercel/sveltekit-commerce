@@ -1,34 +1,20 @@
-<script context="module">
-  export async function load({ fetch }) {
-    const res = await fetch('/getAllCollections.json');
-    if (res.ok) {
-      const result = await res.json();
-      const collections = result.data.collections.edges;
-
-      return {
-        props: { collections }
-      };
-    }
-    const { message } = await res.json();
-
-    return {
-      error: new Error(message)
-    };
-  }
-</script>
-
 <script>
-  import GridTile from '$lib/GridTile.svelte';
+  import GridTile from '$components/GridTile.svelte';
   import { page } from '$app/stores';
+
   export let collections = [];
   let collection;
+
   $: collections.forEach((d) => {
     if (d.node.handle === $page?.params?.collection) {
       collection = d.node;
     }
   });
-  console.log(collection);
 </script>
+
+<svelte:head>
+  <title>{collection?.handle} collection</title>
+</svelte:head>
 
 <div>
   {#if collection}
@@ -36,14 +22,13 @@
       {#each collection.products.edges as product, i (i)}
         <li>
           <div class="group relative block aspect-square overflow-hidden bg-zinc-800">
-            <a sveltekit:prefetch href={`/product/${product.node.handle}`}>
-              <GridTile
-                title={product.node.title}
-                price={product.node.priceRange.maxVariantPrice.amount}
-                currencyCode={product.node.priceRange.maxVariantPrice.currencyCode}
-                imageSrc={product.node.images.edges[0].node.originalSrc}
-              />
-            </a>
+            <GridTile
+              href={`/product/${product?.node?.handle}`}
+              title={product?.node?.title}
+              price={product?.node?.priceRange?.maxVariantPrice?.amount}
+              currencyCode={product?.node?.priceRange?.maxVariantPrice?.currencyCode}
+              imageSrc={product?.node?.images?.edges[0].node?.originalSrc}
+            />
           </div>
         </li>
       {/each}

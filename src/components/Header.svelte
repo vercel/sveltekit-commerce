@@ -1,15 +1,14 @@
 <script>
   import { page } from '$app/stores';
-  import Icons from '$lib/Icons.svelte';
+  import Icons from '$components/Icons.svelte';
   import { cartQuantity } from '../store';
-  import SearchBar from '$lib/SearchBar.svelte';
+  import SearchBar from '$components/SearchBar.svelte';
   import { createEventDispatcher } from 'svelte';
 
   const dispatch = createEventDispatcher();
 
   $: currentRoute = $page.url.pathname;
 
-  let numberOfItemsInBasket = 0;
   let showMenu = false;
 
   let tabs = [
@@ -25,11 +24,11 @@
 
 <nav class="flex items-center border-b border-zinc-700 p-4 lg:px-6">
   <div class="flex w-1/3 items-center">
-    <div class="mr-4" sveltekit:prefetch class:active={currentRoute === '/'}>
+    <div class="mr-4" class:active={currentRoute === '/'}>
       <a href="/" sveltekit:prefetch class="">
         <picture>
           <source srcset="/svelte_logo.png" type="image/png" />
-          <img src="/svelte_logo.png" alt="Svelte Logo" class="h-8" />
+          <img src="/svelte_logo.png" alt="Svelte Logo" height={32} width="100%" class="h-8" />
         </picture>
       </a>
     </div>
@@ -51,9 +50,10 @@
     <SearchBar />
   </div>
   <div class="ml-auto flex items-center">
-    <button on:click={openCart} class="relative mr-4">
+    <button on:click={openCart} class="relative my-2 mx-4">
       <Icons strokeColor="#fff" type="cart" />
       <div
+        data-test="cart-quantity"
         class="absolute bottom-0 left-0 -ml-3 -mb-3 flex h-5 w-5 items-center justify-center rounded-full border border-black bg-white text-xs text-black"
       >
         {$cartQuantity}
@@ -63,6 +63,7 @@
       on:click={() => {
         showMenu = true;
       }}
+      aria-label="Open menu"
       class="lg:hidden"
     >
       <Icons type="menu" />
@@ -78,6 +79,7 @@
       <div class="z-30 w-full bg-black p-6 md:w-1/2 lg:w-1/3">
         <div class="flex w-full items-center justify-between">
           <button
+            aria-label="Close menu"
             on:click={() => {
               showMenu = false;
             }}

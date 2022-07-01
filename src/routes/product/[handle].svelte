@@ -1,30 +1,16 @@
-<script context="module">
-  export async function load({ params, fetch }) {
-    const res = await fetch(`/product/getProduct-${params.handle}.json`);
-    const result = await res.json();
-    const product = result.data.productByHandle;
-
-    const productsRes = await fetch('/search/getAllProducts.json');
-    const allProducts = await productsRes.json();
-    const featuredProducts = allProducts.data.products.edges.slice(0, 4);
-
-    return {
-      props: { product, featuredProducts }
-    };
-  }
-</script>
-
 <script>
-  import GridTile from '$lib/GridTile.svelte';
-  import DescriptionToggle from '$lib/DescriptionToggle.svelte';
-  import Icons from '$lib/Icons.svelte';
+  import GridTile from '$components/GridTile.svelte';
+  import DescriptionToggle from '$components/DescriptionToggle.svelte';
+  import Icons from '$components/Icons.svelte';
   import { getCartItems } from '../../store.js';
+
   export let product;
   export let featuredProducts;
-  console.log(featuredProducts);
+
   let selectedOptions = {};
   let cartLoading = false;
   let currentImageIndex = 0;
+
   $: highlightedImageSrc = product?.images?.edges[currentImageIndex]?.node?.originalSrc;
   product?.options.forEach((option) => {
     selectedOptions = { ...selectedOptions, [option.name]: option.values[0] };
@@ -45,13 +31,16 @@
       }
     }
   }
+
   async function addToCart() {
     cartLoading = true;
     let variantId;
     let cartId;
+
     if (typeof window !== 'undefined') {
       cartId = JSON.parse(localStorage.getItem('cartId'));
     }
+
     product.variants.edges.forEach((variant) => {
       let result = variant.node.selectedOptions.every((option) => {
         return selectedOptions[option.name] === option.value;
@@ -60,20 +49,21 @@
         variantId = variant.node.id;
       }
     });
-    await fetch('/addToCart.json', {
-      method: 'POST',
+
+    await fetch('/cart.json', {
+      method: 'PATCH',
       body: JSON.stringify({ cartId: cartId, variantId: variantId })
-    })
-      .then((response) => {
-        return response.json();
-      })
-      .then((res) => {
-        console.log(res);
-      });
+    });
+    // Wait for the API to finish before updating cart items
     await getCartItems();
+
     cartLoading = false;
   }
 </script>
+
+<svelte:head>
+  <title>{product.title}</title>
+</svelte:head>
 
 <div>
   {#if product}

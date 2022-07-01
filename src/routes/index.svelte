@@ -1,33 +1,14 @@
-<script context="module">
-  export async function load({ fetch }) {
-    const res = await fetch('/getAllCollections.json');
-    if (res.ok) {
-      const result = await res.json();
-      const collections = result?.data?.collections?.edges;
-
-      return {
-        props: { collections }
-      };
-    }
-    const { message } = await res.json();
-
-    return {
-      error: new Error(message)
-    };
-  }
-</script>
-
 <script>
-  import ThreeItemGrid from '$lib/ThreeItemGrid.svelte';
-  import Carousel from '$lib/Carousel.svelte';
+  import ThreeItemGrid from '$components/ThreeItemGrid.svelte';
+  import Carousel from '$components/Carousel.svelte';
 
-  export let collections = [];
-  $: clothesCollection = collections[0]?.node?.products?.edges;
-  $: featuredCollection = collections[1]?.node?.products?.edges;
+  export let products;
+  $: clothesCollection = products[0]?.node?.products?.edges;
+  $: featuredCollection = products[1]?.node?.products?.edges;
 </script>
 
 <svelte:head>
-  <title>Home</title>
+  <title>Home – SvelteKit Commerce</title>
 </svelte:head>
 
 <main>
@@ -54,7 +35,7 @@
           bonbon croissant fruitcake jujubes macaroon oat cake. Soufflé bonbon caramels jelly beans.
           Tiramisu sweet roll cheesecake pie carrot cake.
         </div>
-        <button class="mt-4 font-bold text-indigo-500 hover:text-indigo-600 lg:text-2xl">
+        <button class="mt-4 font-bold text-indigo-700 hover:text-indigo-900 lg:text-2xl">
           Read it here
         </button>
       </div>
