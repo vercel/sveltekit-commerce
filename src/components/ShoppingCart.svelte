@@ -56,7 +56,9 @@
       {#each items as item, i (i)}
         <div class="mb-2 flex w-full">
           <img
-            alt=""
+            alt={item.node.merchandise.product.title}
+            decoding="async"
+            loading="lazy"
             class="w-20 flex-none bg-white"
             src={item.node.merchandise.product.images.edges[0].node.originalSrc}
           />
