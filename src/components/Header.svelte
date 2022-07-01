@@ -30,12 +30,12 @@
           <source srcset="/svelte_logo.png" type="image/png" />
           <img 
             alt="Svelte Logo"
-            class="h-8"
+            class="h-[38] w-[32]"
             decoding="async"
-            height={32}
+            height={38}
             loading="eager"
             src="/svelte_logo.png"
-            width={27}
+            width={32}
           />
         </picture>
       </a>

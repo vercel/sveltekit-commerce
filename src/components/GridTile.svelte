@@ -5,7 +5,7 @@
   export let price = '';
   export let currencyCode = '';
   export let href = '';
-  export let priority = 'eager';
+  export let priority = 'lazy';
 
   let hover = false;
 </script>
@@ -22,7 +22,7 @@
   <a data-test="grid-tile" href={href} sveltekit:prefetch class="relative flex h-full w-full items-center justify-center">
     <img
       alt={title}
-      class={`h-full md:w-1/2 lg:w-full flex-none transition duration-300 ease-in-out ${
+      class={`w-full md:w-1/2 lg:w-full flex-none transition duration-300 ease-in-out ${
         hover ? 'scale-110' : ''
       }`}
       decoding="async"
