@@ -8,6 +8,11 @@ const config = {
     alias: {
       $components: 'src/components',
       $utils: 'src/utils'
+    },
+    vite: {
+      define: {
+        'import.meta.env.VERCEL_ANALYTICS_ID': JSON.stringify(process.env.VERCEL_ANALYTICS_ID)
+      }
     }
   },
   preprocess: [

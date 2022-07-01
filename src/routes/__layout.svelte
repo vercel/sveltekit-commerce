@@ -5,12 +5,23 @@
   import ShoppingCart from '$components/ShoppingCart.svelte';
   import { getCartItems } from '../store';
   import { onMount } from 'svelte';
+  import { page } from '$app/stores';
   import { createCart } from '$utils/shopify';
+  import { webVitals } from '$utils/vitals';
 
   let cartId;
   let checkoutUrl;
   let cartCreatedAt;
   let cartItems = [];
+
+  let analyticsId = import.meta.env.VERCEL_ANALYTICS_ID;
+  $: if (browser && analyticsId) {
+    webVitals({
+      path: $page.url.pathname,
+      params: $page.params,
+      analyticsId
+    })
+  }
 
   onMount(async () => {
     if (typeof window !== 'undefined') {
