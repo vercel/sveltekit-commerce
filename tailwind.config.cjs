@@ -5,7 +5,8 @@ module.exports = {
       colors: {
         'svelteOrange': '#FF3E00',
         'svelteDark': '#F03A00',
-        'hotPink': '#F00083'
+        'hotPink': '#FF1966',
+        'dark': '#111111'
       },
     }
   },

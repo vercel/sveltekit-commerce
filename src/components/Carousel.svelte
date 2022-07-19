@@ -2,10 +2,10 @@
   export let items = [];
 </script>
 
-<div class="slider relative w-full overflow-scroll bg-white">
+<div class="slider relative w-full overflow-scroll bg-dark">
   <div class="slide-track flex">
     {#each items as item (item.node.id)}
-      <a href={`/product/${item.node.handle}`} class="slide relative h-[40vh] flex-none md:w-1/3">
+      <a href={`/product/${item.node.handle}`} class="slide relative h-[40vh] background-gradient flex-none md:w-1/3">
         <img
           alt={item.node.title}
           class="h-full"
@@ -50,5 +50,10 @@
   .slider .slide-track {
     -webkit-animation: scroll 40s linear infinite;
     animation: scroll 40s linear infinite;
+  }
+
+  .background-gradient {
+    background: rgb(255,62,0);
+    background: radial-gradient(circle, rgba(255,62,0,0.1) 0%, rgba(255,62,0,0) 85%);
   }
 </style>
