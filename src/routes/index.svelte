@@ -35,7 +35,7 @@
           bonbon croissant fruitcake jujubes macaroon oat cake. Soufflé bonbon caramels jelly beans.
           Tiramisu sweet roll cheesecake pie carrot cake.
         </div>
-        <button class="mt-4 font-bold text-indigo-700 hover:text-indigo-900 lg:text-2xl">
+        <button class="mt-4 font-bold text-svelteOrange hover:text-svelteDark lg:text-2xl">
           Read it here
         </button>
       </div>
