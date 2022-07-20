@@ -22,7 +22,7 @@
   </section>
   <section>
     <div
-      class="flex flex-col border border-black bg-light py-20 px-8 text-black lg:flex-row lg:items-center"
+      class="flex flex-col border border-black bg-dark py-20 px-8 text-white lg:flex-row lg:items-center"
     >
       <div
         class="mb-4 mr-8 flex-none text-left text-3xl font-black md:text-4xl lg:mb-0 lg:w-1/3 lg:text-right lg:text-6xl"
