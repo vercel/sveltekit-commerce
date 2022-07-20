@@ -2,7 +2,7 @@
   export let items = [];
 </script>
 
-<div class="slider relative w-full overflow-scroll bg-white">
+<div class="slider relative w-full overflow-scroll bg-light">
   <div class="slide-track flex">
     {#each items as item (item.node.id)}
       <a href={`/product/${item.node.handle}`} class="slide relative h-[40vh] flex-none md:w-1/3">

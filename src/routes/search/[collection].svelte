@@ -21,7 +21,7 @@
     <ul class="grid grid-flow-row gap-4 sm:grid-cols-2 md:grid-cols-3">
       {#each collection.products.edges as product, i (i)}
         <li>
-          <div class="group relative block aspect-square overflow-hidden bg-zinc-800">
+          <div class="group relative block aspect-square overflow-hidden bg-dark">
             <GridTile
               href={`/product/${product?.node?.handle}`}
               title={product?.node?.title}

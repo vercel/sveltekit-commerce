@@ -70,7 +70,7 @@
     <div class="flex flex-col md:flex-row">
       <div class="md:h-90 md:w-2/3">
         {#key highlightedImageSrc}
-          <div class="relative h-4/5 bg-violet-700">
+          <div class="relative h-4/5 bg-light">
             <GridTile
               title={product.title}
               price={product.priceRange.maxVariantPrice.amount}
@@ -83,21 +83,21 @@
                   on:click={() => {
                     changeHighlightedImage('back');
                   }}
-                  class="border border-b border-t border-l border-black bg-violet-700 py-4 px-8 hover:bg-violet-800"
+                  class="border border-b border-t border-l border-black py-4 px-8"
                   ><Icons type="arrowLeft" /></button
                 >
                 <button
                   on:click={() => {
                     changeHighlightedImage('next');
                   }}
-                  class="-ml-2 border border-black bg-violet-700 py-4 px-8 hover:bg-violet-800"
+                  class="-ml-1 border border-black py-4 px-8"
                   ><Icons type="arrowRight" /></button
                 >
               </div>
             {/if}
           </div>
         {/key}
-        <div class="flex h-1/5 bg-violet-900">
+        <div class="flex h-1/5 ">
           {#each product.images.edges as variant, i}
             <div class="h-full w-1/4 bg-white">
               <GridTile
@@ -154,7 +154,7 @@
         </div>
         <button
           on:click={addToCart}
-          class="mt-6 flex w-full items-center justify-center bg-white p-4 text-sm uppercase tracking-wide text-black opacity-90 hover:opacity-100"
+          class="mt-6 flex w-full items-center justify-center bg-light p-4 text-sm uppercase tracking-wide text-black opacity-90 hover:opacity-100"
         >
           <span>Add To Cart</span>
           {#if cartLoading}
@@ -184,12 +184,11 @@
             <div
               class="group relative block aspect-square overflow-hidden border border-white/20 bg-zinc-800/50"
             >
-              <a sveltekit:prefetch href={`/product/${product.node.handle}`}>
-                <GridTile
-                  removeLabels={true}
-                  imageSrc={product.node.images.edges[0].node.originalSrc}
-                />
-              </a>
+              <GridTile
+                removeLabels={true}
+                imageSrc={product.node.images.edges[0].node.originalSrc}
+                href={`/product/${product.node.handle}`}
+              />
             </div>
           </li>
         {/each}
