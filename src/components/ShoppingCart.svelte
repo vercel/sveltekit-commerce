@@ -32,6 +32,7 @@
     loading = true;
     let checkoutUrl = localStorage.getItem('cartUrl');
     window.open(JSON.parse(checkoutUrl), '_blank');
+    loading = false;
   }
 </script>
 
