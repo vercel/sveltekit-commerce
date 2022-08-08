@@ -33,7 +33,10 @@
     if (typeof window !== 'undefined') {
       localStorage.setItem('cartCreatedAt', Date.now());
       localStorage.setItem('cartId', JSON.stringify(cartRes.body?.data?.cartCreate?.cart?.id));
-      localStorage.setItem('cartUrl', JSON.stringify(cartRes.body?.data?.cartCreate?.cart?.checkoutUrl));
+      localStorage.setItem(
+        'cartUrl',
+        JSON.stringify(cartRes.body?.data?.cartCreate?.cart?.checkoutUrl)
+      );
     }
   }
 

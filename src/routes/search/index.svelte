@@ -22,12 +22,12 @@
       <li>
         <div class="group relative block aspect-square overflow-hidden bg-dark">
           <GridTile
-              title={product.node.title}
-              href={`/product/${product.node.handle}`}
-              price={product.node.priceRange.maxVariantPrice.amount}
-              currencyCode={product.node.priceRange.maxVariantPrice.currencyCode}
-              imageSrc={product.node.images.edges[0].node.originalSrc}
-            />
+            title={product.node.title}
+            href={`/product/${product.node.handle}`}
+            price={product.node.priceRange.maxVariantPrice.amount}
+            currencyCode={product.node.priceRange.maxVariantPrice.currencyCode}
+            imageSrc={product.node.images.edges[0].node.originalSrc}
+          />
         </div>
       </li>
     {/each}

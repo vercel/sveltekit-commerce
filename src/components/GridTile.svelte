@@ -19,7 +19,12 @@
   }}
   class="h-full w-full overflow-hidden"
 >
-  <a data-test="grid-tile" href={href} sveltekit:prefetch class="relative flex h-full w-full items-center justify-center">
+  <a
+    data-test="grid-tile"
+    {href}
+    sveltekit:prefetch
+    class="relative flex h-full w-full items-center justify-center"
+  >
     <img
       alt={title}
       class={`w-full md:w-1/2 lg:w-full flex-none transition duration-300 ease-in-out ${
@@ -41,5 +46,5 @@
         </div>
       </div>
     {/if}
-    </a>
+  </a>
 </div>

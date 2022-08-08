@@ -90,8 +90,7 @@
                   on:click={() => {
                     changeHighlightedImage('next');
                   }}
-                  class="-ml-1 border border-black py-4 px-8"
-                  ><Icons type="arrowRight" /></button
+                  class="-ml-1 border border-black py-4 px-8"><Icons type="arrowRight" /></button
                 >
               </div>
             {/if}
