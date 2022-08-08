@@ -28,7 +28,7 @@
       <a href="/" sveltekit:prefetch class="">
         <picture>
           <source srcset="/svelte_logo.png" type="image/png" />
-          <img 
+          <img
             alt="Svelte Logo"
             class="h-[38] w-[32]"
             decoding="async"
