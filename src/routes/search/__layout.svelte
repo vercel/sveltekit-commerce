@@ -4,6 +4,7 @@
     <ul>
       <li class="mt-2 text-sm text-gray-300">
         <a
+          sveltekit:prefetch
           data-testid="category-link"
           aria-selected="true"
           class="whitespace-nowrap hover:underline focus:underline"
@@ -12,6 +13,7 @@
       </li>
       <li class="mt-2 text-sm text-gray-300">
         <a
+          sveltekit:prefetch
           data-testid="category-link"
           aria-selected="true"
           class="whitespace-nowrap hover:underline focus:underline"
@@ -20,6 +22,7 @@
       </li>
       <li class="mt-2 text-sm text-gray-300">
         <a
+          sveltekit:prefetch
           data-testid="category-link"
           aria-selected="true"
           class="whitespace-nowrap hover:underline focus:underline"
