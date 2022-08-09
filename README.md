@@ -15,6 +15,7 @@ This template includes read-only Shopify credentials by default, but you can add
 
 ## Running Locally
 
-- `yarn dev`: Install dependencies
-- `yarn build`: Create a production build of the app
-- `yarn preview`: Preview the production build
+- `pnpm install`: Install dependencies
+- `pnpm dev`: Start development server
+- `pnpm build`: Create a production build of the app
+- `pnpm preview`: Preview the production build
