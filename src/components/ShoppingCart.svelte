@@ -5,11 +5,13 @@
   export let loading = false;
   export let items = [];
   function addOneItem(item, i) {
+    loading = true;
     dispatch('addProduct', {
       body: item.node.merchandise.id
     });
   }
   function removeOneItem(item, i) {
+    loading = true;
     let quantity = item.node.quantity - 1;
     dispatch('removeProduct', {
       body: {
@@ -20,6 +22,7 @@
     });
   }
   function removeEntireItem(item, i) {
+    loading = true;
     dispatch('removeProduct', {
       body: {
         variantId: item.node.merchandise.id,
@@ -40,7 +43,10 @@
   on:click|self
   class="absolute inset-0 z-50 flex max-h-screen w-full justify-end overflow-hidden bg-black/50"
 >
-  <div class="z-50 w-full bg-black p-6 md:w-1/2 lg:w-1/3">
+  <div class="z-50 w-full bg-black p-6 md:w-1/2 lg:w-1/3 relative">
+    {#if loading}
+      <div class="absolute inset-0 bg-black/50 z-50" />
+    {/if}
     <div class="mb-6 flex w-full items-center justify-between">
       <div class="text-2xl font-medium">My Cart</div>
       <button on:click class="text-sm uppercase opacity-80 hover:opacity-100">close</button>

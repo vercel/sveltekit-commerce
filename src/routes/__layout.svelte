@@ -68,6 +68,7 @@
     });
     // Wait for the API to finish before updating cart items
     await loadCart();
+    loading = false;
   }
 
   async function removeProduct(event) {
@@ -81,6 +82,7 @@
       })
     });
     await loadCart();
+    loading = false;
   }
 </script>
 
