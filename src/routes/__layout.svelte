@@ -19,7 +19,10 @@
       checkoutUrl = JSON.parse(localStorage.getItem('cartUrl'));
 
       let currentDate = Date.now();
-      let cartIdExpired = currentDate - cartCreatedAt > 1000 * 60 * 60 * 24 * 7;
+      let difference = currentDate - cartCreatedAt;
+      let totalDays = Math.ceil(difference / (1000 * 3600 * 24));
+      console.log(totalDays);
+      let cartIdExpired = totalDays > 6;
       if (cartId === 'undefined' || cartId === 'null' || cartIdExpired) {
         await callCreateCart();
       }
