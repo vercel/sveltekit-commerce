@@ -21,12 +21,17 @@
       let currentDate = Date.now();
       let difference = currentDate - cartCreatedAt;
       let totalDays = Math.ceil(difference / (1000 * 3600 * 24));
-      console.log(totalDays);
       let cartIdExpired = totalDays > 6;
       if (cartId === 'undefined' || cartId === 'null' || cartIdExpired) {
         await callCreateCart();
       }
       await loadCart();
+      document.addEventListener('keydown', (e) => {
+        let keyCode = e.keyCode;
+        if (keyCode === 27) {
+          showCart = false;
+        }
+      });
     }
   });
 
