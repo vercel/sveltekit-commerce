@@ -2,9 +2,11 @@
   import ThreeItemGrid from '$components/ThreeItemGrid.svelte';
   import Carousel from '$components/Carousel.svelte';
 
-  export let products;
-  $: clothesCollection = products[0]?.node?.products?.edges;
-  $: featuredCollection = products[1]?.node?.products?.edges;
+  /** @type {import('./$types').PageData} */
+  export let data;
+
+  $: clothesCollection = data[0]?.node?.products?.edges;
+  $: featuredCollection = data[1]?.node?.products?.edges;
 </script>
 
 <svelte:head>

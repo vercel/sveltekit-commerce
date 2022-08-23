@@ -1,4 +1,4 @@
-import { createCart, addToCart, updateCart } from '../utils/shopify.js';
+import { createCart, addToCart, updateCart } from '../../utils/shopify.js';
 
 export async function post() {
   await createCart();
