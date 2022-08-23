@@ -23,7 +23,7 @@
     data-test="grid-tile"
     {href}
     sveltekit:prefetch
-    class="relative flex h-full w-full items-center justify-center"
+    class="focus:border-blue-500 focus:border-2 relative flex h-full w-full items-center justify-center"
   >
     <img
       alt={title}

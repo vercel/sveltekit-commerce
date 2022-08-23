@@ -1,15 +1,16 @@
 <script>
-  import { search } from '../store.js';
   import { page } from '$app/stores';
   import { goto } from '$app/navigation';
   import Icons from './Icons.svelte';
 
-  let value = '';
-  function submit(e) {
-    if ($page.url.pathname !== 'search') {
-      goto('/search');
+  let value = $page.url.searchParams.get('q');
+
+  async function submit(e) {
+    let query = new URLSearchParams();
+    if (value) {
+      query.set('q', value);
     }
-    search.set(value);
+    await goto(`/search${query ? `?${query}` : ''}`, { keepfocus: true });
   }
 </script>
 
@@ -18,8 +19,11 @@
     <Icons strokeColor="#fff" type="search" />
   </div>
   <input
+    id="searchInput"
+    type="text"
     bind:value
     placeholder="Search for products..."
+    autocomplete="off"
     class="w-full border border-white/30 bg-transparent p-2"
   />
 </form>

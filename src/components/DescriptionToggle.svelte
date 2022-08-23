@@ -8,7 +8,7 @@
   let toggle = false;
 </script>
 
-<div
+<button
   on:click={() => {
     toggle = !toggle;
   }}
@@ -23,7 +23,7 @@
       <div transition:fade={{ duration: 300 }}>{description}</div>
     {/if}
   </div>
-</div>
+</button>
 
 <style>
   .rotate {
