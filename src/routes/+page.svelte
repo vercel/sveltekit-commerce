@@ -5,6 +5,8 @@
   /** @type {import('./$types').PageData} */
   export let data;
 
+  console.log({data});
+
   $: clothesCollection = data[0]?.node?.products?.edges;
   $: featuredCollection = data[1]?.node?.products?.edges;
 </script>

@@ -5,6 +5,7 @@ export async function shopifyFetch({ query, variables }) {
   const key =
     import.meta.env.VITE_SHOPIFY_STOREFRONT_API_TOKEN || 'ef7d41c7bf7e1c214074d0d3047bcd7b';
 
+  console.log({ endpoint, key });
   try {
     const result = await fetch(endpoint, {
       method: 'POST',
