@@ -5,7 +5,7 @@ export async function shopifyFetch({ query, variables }) {
   const key =
     import.meta.env.VITE_SHOPIFY_STOREFRONT_API_TOKEN || 'ef7d41c7bf7e1c214074d0d3047bcd7b';
 
-  console.log({ endpoint, key });
+
   try {
     const result = await fetch(endpoint, {
       method: 'POST',
@@ -15,6 +15,7 @@ export async function shopifyFetch({ query, variables }) {
       },
       body: { query, variables } && JSON.stringify({ query, variables })
     });
+    
     return {
       status: result.status,
       body: await result.json()
@@ -29,7 +30,7 @@ export async function shopifyFetch({ query, variables }) {
 }
 
 export async function getAllProducts() {
-  return shopifyFetch({
+  return await shopifyFetch({
     query: `{
       products(sortKey: TITLE, first: 100) {
           edges{
@@ -104,7 +105,7 @@ export async function getAllProducts() {
 }
 
 export async function getAllCollections() {
-  return shopifyFetch({
+  return await shopifyFetch({
     query: `{
         collections(first: 100) {
              edges {
@@ -190,7 +191,7 @@ export async function getAllCollections() {
 }
 
 export async function loadCart(cartId) {
-  return shopifyFetch({
+  return await shopifyFetch({
     query: `
         query GetCart($cartId: ID!) {
           cart(id: $cartId) {
@@ -245,7 +246,7 @@ export async function loadCart(cartId) {
 }
 
 export async function getProduct(handle) {
-  return shopifyFetch({
+  return await shopifyFetch({
     query: ` 
         query getProduct($handle: String!) {
             productByHandle(handle: $handle) {
@@ -321,7 +322,7 @@ export async function getProduct(handle) {
 }
 
 export async function createCart() {
-  return shopifyFetch({
+  return await shopifyFetch({
     query: `
       mutation calculateCart($lineItems: [CartLineInput!]) {
         cartCreate(input: { lines: $lineItems }) {
@@ -337,7 +338,7 @@ export async function createCart() {
 }
 
 export async function updateCart({ cartId, lineId, variantId, quantity }) {
-  return shopifyFetch({
+  return await shopifyFetch({
     query: `
       mutation cartLinesUpdate($cartId: ID!, $lines: [CartLineUpdateInput!]!) {
         cartLinesUpdate(cartId: $cartId, lines: $lines) {
@@ -362,7 +363,8 @@ export async function updateCart({ cartId, lineId, variantId, quantity }) {
 }
 
 export async function addToCart({ cartId, variantId }) {
-  return shopifyFetch({
+
+  return await shopifyFetch({
     query: `
       mutation addToCart($cartId: ID!, $lines: [CartLineInput!]!) {
         cartLinesAdd(cartId: $cartId, lines: $lines) {

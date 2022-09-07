@@ -1,6 +1,7 @@
 import { getProduct, getAllProducts } from '$utils/shopify';
+import { error } from '@sveltejs/kit';
 
-export async function get({ params }) {
+export async function load({ params }) {
   const [resOne, resTwo] = await Promise.all([getProduct(params.handle), getAllProducts()]);
 
   if (resOne.status === 200 && resTwo.status === 200) {
@@ -16,8 +17,9 @@ export async function get({ params }) {
       };
     }
 
-    return {
-      status: 404
-    };
+    throw error(404)
+  } else {
+    let status = resOne.status !== 200 ? resOne.status : resTwo.status
+    throw error(status)
   }
 }

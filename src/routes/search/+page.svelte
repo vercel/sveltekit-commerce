@@ -4,14 +4,13 @@
 
   /** @type {import('./$types').PageData} */
   export let data;
-
-  $: searchedItems = data.allProducts.edges.filter((item) => {
+  $: searchedItems = data.body.allProducts.edges.filter((item) => {
     if (item.node.title.toLowerCase().includes($search.toLowerCase())) {
       return item;
     }
   });
 
-  let displayedProducts = data.allProducts.edges;
+  let displayedProducts = data.body.allProducts.edges;
   $: if (searchedItems.length > 0) {
     displayedProducts = searchedItems;
   }

@@ -6,7 +6,7 @@
   export let data;
   let collection;
 
-  $: data.collections.forEach((d) => {
+  $: data.body.collections.forEach((d) => {
     if (d.node.handle === $page?.params?.collection) {
       collection = d.node;
     }
