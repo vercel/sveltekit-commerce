@@ -1,19 +1,16 @@
 <script>
   import GridTile from '$components/GridTile.svelte';
-  import { search } from '../../store.js';
+  import { page } from '$app/stores';
 
   export let allProducts;
 
-  $: searchedItems = allProducts.edges.filter((item) => {
-    if (item.node.title.toLowerCase().includes($search.toLowerCase())) {
-      return item;
-    }
-  });
+  $: search = $page.url.searchParams.get('q');
 
-  let displayedProducts = allProducts.edges;
-  $: if (searchedItems.length > 0) {
-    displayedProducts = searchedItems;
-  }
+  $: displayedProducts = search
+    ? allProducts.edges.filter((item) => {
+        return item.node.title.toLowerCase().includes(search.toLowerCase());
+      })
+    : allProducts.edges;
 </script>
 
 <div>
@@ -30,6 +27,8 @@
           />
         </div>
       </li>
+    {:else}
+      <p>No products :(</p>
     {/each}
   </ul>
 </div>

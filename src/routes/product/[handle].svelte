@@ -98,14 +98,13 @@
         {/key}
         <div class="flex h-1/5 ">
           {#each product.images.edges as variant, i}
-            <div class="h-full w-1/4 bg-white">
-              <GridTile
-                on:click={() => {
-                  currentImageIndex = i;
-                }}
-                imageSrc={variant.node.originalSrc}
-                removeLabels={true}
-              />
+            <div
+              on:click={() => {
+                currentImageIndex = i;
+              }}
+              class="h-full w-1/4 bg-white"
+            >
+              <GridTile imageSrc={variant.node.originalSrc} removeLabels={true} />
             </div>
           {/each}
         </div>
