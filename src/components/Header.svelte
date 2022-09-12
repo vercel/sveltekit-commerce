@@ -25,7 +25,7 @@
 <nav class="flex items-center border-b border-zinc-700 p-4 lg:px-6">
   <div class="flex w-1/3 items-center">
     <div class="mr-4" class:active={currentRoute === '/'}>
-      <a href="/" sveltekit:prefetch class="">
+      <a href="/" data-sveltekit-prefetch class="">
         <picture>
           <source srcset="/svelte_logo.png" type="image/png" />
           <img
@@ -44,7 +44,7 @@
       {#each tabs as tab, i (tab.name)}
         <div class:active={currentRoute === tab.path}>
           <a
-            sveltekit:prefetch
+            data-sveltekit-prefetch
             href={tab.path}
             class={`hover:opacity-100 px-2 py-1 text-white rounded-lg ${
               currentRoute === tab.path ? 'opacity-100' : 'opacity-75'
@@ -112,7 +112,7 @@
               }}
             >
               <a
-                sveltekit:prefetch
+                data-sveltekit-prefetch
                 href={tab.path}
                 class={`hover:opacity-100 px-2 py-1 text-white font-bold text-xl rounded-lg ${
                   currentRoute === tab.path ? 'opacity-100' : 'opacity-75'
