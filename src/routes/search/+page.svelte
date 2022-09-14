@@ -2,15 +2,15 @@
   import GridTile from '$components/GridTile.svelte';
   import { page } from '$app/stores';
 
-  export let allProducts;
-
+  /** @type {import('./$types').PageData} */
+  export let data;
   $: search = $page.url.searchParams.get('q');
 
   $: displayedProducts = search
-    ? allProducts.edges.filter((item) => {
+    ? data.body.allProducts.edges.filter((item) => {
         return item.node.title.toLowerCase().includes(search.toLowerCase());
       })
-    : allProducts.edges;
+    : data.body.allProducts.edges;
 </script>
 
 <div>

@@ -6,7 +6,7 @@
   <div class="slide-track flex">
     {#each items as item (item.node.id)}
       <a
-        sveltekit:prefetch
+        data-sveltekit-prefetch
         href={`/product/${item.node.handle}`}
         class="slide relative h-[40vh] flex-none md:w-1/3"
       >

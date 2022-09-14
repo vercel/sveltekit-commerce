@@ -13,7 +13,7 @@
     </div>
     <a
       href="/"
-      sveltekit:prefetch
+      data-sveltekit-prefetch
       class="w-full bg-white/90 p-3 text-center text-sm font-medium uppercase text-black hover:bg-white/100"
     >
       Return to Home Page
