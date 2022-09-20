@@ -9,6 +9,7 @@ export async function POST() {
 
 export async function PUT({ request }) {
   const body = await request.json();
+
   const response = await updateCart(body);
 
   if(response.status === 200) {

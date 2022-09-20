@@ -3,18 +3,16 @@
   import Header from '$components/Header.svelte';
   import Footer from '$components/Footer.svelte';
   import ShoppingCart from '$components/ShoppingCart.svelte';
-  import { getCartItems } from '../store';
+  import { cartId, getCartItems } from '../store';
   import { onMount } from 'svelte';
   import { createCart } from '$utils/shopify';
 
-  let cartId;
   let checkoutUrl;
   let cartCreatedAt;
   let cartItems = [];
 
   onMount(async () => {
     if (typeof window !== 'undefined') {
-      cartId = JSON.parse(localStorage.getItem('cartId'));
       cartCreatedAt = JSON.parse(localStorage.getItem('cartCreatedAt'));
       checkoutUrl = JSON.parse(localStorage.getItem('cartUrl'));
 
@@ -22,7 +20,7 @@
       let difference = currentDate - cartCreatedAt;
       let totalDays = Math.ceil(difference / (1000 * 3600 * 24));
       let cartIdExpired = totalDays > 6;
-      if (cartId === 'undefined' || cartId === 'null' || cartIdExpired) {
+      if ($cartId === 'undefined' || $cartId === 'null' || cartIdExpired) {
         await callCreateCart();
       }
       await loadCart();
@@ -40,7 +38,8 @@
 
     if (typeof window !== 'undefined') {
       localStorage.setItem('cartCreatedAt', Date.now());
-      localStorage.setItem('cartId', JSON.stringify(cartRes.body?.data?.cartCreate?.cart?.id));
+      cartId.set(cartRes.body?.data?.cartCreate?.cart?.id);
+      // localStorage.setItem('cartId', JSON.stringify(cartRes.body?.data?.cartCreate?.cart?.id));
       localStorage.setItem(
         'cartUrl',
         JSON.stringify(cartRes.body?.data?.cartCreate?.cart?.checkoutUrl)
@@ -50,6 +49,7 @@
 
   async function loadCart() {
     const res = await getCartItems();
+    console.log(res);
     cartItems = res?.body?.data?.cart?.lines?.edges;
   }
 
@@ -70,9 +70,10 @@
   }
 
   async function addToCart(event) {
+    console.log(event);
     await fetch('/cart.json', {
       method: 'PATCH',
-      body: JSON.stringify({ cartId: cartId, variantId: event.detail.body })
+      body: JSON.stringify({ cartId: $cartId, variantId: event.detail.body })
     });
     // Wait for the API to finish before updating cart items
     await loadCart();
@@ -83,7 +84,7 @@
     await fetch('/cart.json', {
       method: 'PUT',
       body: JSON.stringify({
-        cartId,
+        cartId: $cartId,
         lineId: event.detail.body.lineId,
         quantity: event.detail.body.quantity,
         variantId: event.detail.body.variantId
