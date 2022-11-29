@@ -10,7 +10,7 @@
     if (value) {
       query.set('q', value);
     }
-    await goto(`/search${query ? `?${query}` : ''}`, { keepfocus: true });
+    await goto(`/search${query ? `?${query}` : ''}`, { keepFocus: true });
   }
 </script>
 
