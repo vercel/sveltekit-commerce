@@ -11,24 +11,21 @@
     "lint": "prettier --check .",
     "format": "prettier --write ."
   },
-  "dependencies": {
-    "@shopify/shopify-api": "5.2.0"
-  },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "1.0.0-next.90",
-    "@sveltejs/kit": "1.0.0-next.567",
+    "@sveltejs/adapter-auto": "2.0.0",
+    "@sveltejs/kit": "1.5.0",
     "autoprefixer": "^10.4.13",
-    "eslint": "^8.28.0",
-    "eslint-config-prettier": "8.5.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "8.6.0",
     "node-sass": "8.0.0",
-    "postcss": "^8.4.19",
+    "postcss": "^8.4.21",
     "postcss-load-config": "4.0.1",
-    "prettier": "2.8.0",
-    "prettier-plugin-svelte": "2.8.1",
-    "prettier-plugin-tailwindcss": "0.2.0",
-    "svelte": "3.53.1",
-    "svelte-preprocess": "^4.10.7",
+    "prettier": "2.8.3",
+    "prettier-plugin-svelte": "2.9.0",
+    "prettier-plugin-tailwindcss": "0.2.2",
+    "svelte": "3.55.1",
+    "svelte-preprocess": "^5.0.1",
     "tailwindcss": "^3.2.4",
-    "vite": "^3.2.4"
+    "vite": "^4.1.1"
   }
 }

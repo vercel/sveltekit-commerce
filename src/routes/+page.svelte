@@ -5,8 +5,8 @@
   /** @type {import('./$types').PageData} */
   export let data;
 
-  $: clothesCollection = data[0]?.node?.products?.edges;
-  $: featuredCollection = data[1]?.node?.products?.edges;
+  $: clothesCollection = data.products[0]?.node?.products?.edges;
+  $: featuredCollection = data.products[1]?.node?.products?.edges;
 </script>
 
 <svelte:head>
