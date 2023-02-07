@@ -8,10 +8,10 @@ export async function load({ url }) {
     const products = res.body?.data?.collections?.edges;
 
     if (products) {
-      return products;
-    } 
-    throw error(404)
+      return { products };
+    }
+    throw error(404);
   } else {
-    throw error(res.status)
+    throw error(res.status);
   }
 }
