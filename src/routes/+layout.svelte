@@ -80,6 +80,9 @@
   }
 
   async function removeProduct(event) {
+    if (typeof window !== 'undefined') {
+      cartId = JSON.parse(localStorage.getItem('cartId'));
+    }
     await fetch('/cart.json', {
       method: 'PUT',
       body: JSON.stringify({
