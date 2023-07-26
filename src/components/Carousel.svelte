@@ -2,7 +2,7 @@
   export let items = [];
 </script>
 
-<div class="slider relative w-full overflow-scroll bg-light">
+<div class="slider relative w-full overflow-x-scroll bg-light">
   <div class="slide-track flex">
     {#each items as item (item.node.id)}
       <a
