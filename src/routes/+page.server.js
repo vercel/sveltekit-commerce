@@ -10,8 +10,8 @@ export async function load({ url }) {
     if (products) {
       return { products };
     }
-    throw error(404);
+    error(404);
   } else {
-    throw error(res.status);
+    error(res.status);
   }
 }

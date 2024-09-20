@@ -39,6 +39,8 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
   on:click|self
   class="absolute inset-0 z-50 flex max-h-screen w-full justify-end overflow-hidden bg-black/50"
@@ -89,7 +91,7 @@
             <Icons type="close" strokeColor="#fff" />
           </button>
           <div class="flex h-8 w-full border border-white/40">
-            <div class="flex h-full items-center px-2 ">
+            <div class="flex h-full items-center px-2">
               {item.node.quantity}
             </div>
             <button
