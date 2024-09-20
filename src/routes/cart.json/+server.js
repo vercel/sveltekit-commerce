@@ -14,7 +14,7 @@ export async function PUT({ request }) {
   if(response.status === 200) {
     return new Response({data: response.body.data});
   } else {
-    throw error(response.status)
+    error(response.status);
   }
 
 }
@@ -25,7 +25,7 @@ export async function PATCH({ request }) {
   if(response.status === 200) {
     return new Response({data: response.body.data});
   } else {
-    throw error(response.status)
+    error(response.status);
   }
 
 }

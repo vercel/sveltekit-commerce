@@ -20,7 +20,7 @@
   <div class="ml-4">
     <div class="mb-2">{title}</div>
     {#if toggle}
-      <div transition:fade={{ duration: 300 }}>{description}</div>
+      <div transition:fade|global={{ duration: 300 }}>{description}</div>
     {/if}
   </div>
 </button>
