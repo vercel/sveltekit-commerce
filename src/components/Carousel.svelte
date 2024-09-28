@@ -1,5 +1,6 @@
 <script>
-  export let items = [];
+  /** @type {{items?: any}} */
+  let { items = [] } = $props();
 </script>
 
 <div class="slider relative w-full overflow-scroll bg-light">

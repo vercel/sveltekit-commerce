@@ -1,16 +1,21 @@
 <script>
   import Icons from './Icons.svelte';
   import { createEventDispatcher } from 'svelte';
+
   const dispatch = createEventDispatcher();
+
+  /** @type {{loading?: boolean, items?: any[]}} */
   export let loading = false;
   export let items = [];
-  function addOneItem(item, i) {
+
+  function addOneItem(item) {
     loading = true;
     dispatch('addProduct', {
       body: item.node.merchandise.id
     });
   }
-  function removeOneItem(item, i) {
+
+  function removeOneItem(item) {
     loading = true;
     let quantity = item.node.quantity - 1;
     dispatch('removeProduct', {
@@ -21,7 +26,8 @@
       }
     });
   }
-  function removeEntireItem(item, i) {
+
+  function removeEntireItem(item) {
     loading = true;
     dispatch('removeProduct', {
       body: {
@@ -31,27 +37,40 @@
       }
     });
   }
+
   async function checkout() {
     loading = true;
     let checkoutUrl = localStorage.getItem('cartUrl');
     window.open(JSON.parse(checkoutUrl), '_blank');
     loading = false;
   }
+
+  function closeCart() {
+    dispatch('close');
+  }
+
+  function handleKeyDown(event) {
+    if (event.key === 'Escape') {
+      closeCart();
+    }
+  }
 </script>
 
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-  on:click|self
   class="absolute inset-0 z-50 flex max-h-screen w-full justify-end overflow-hidden bg-black/50"
+  on:click|self={closeCart}
+  on:keydown={handleKeyDown}
+  role="dialog"
+  aria-label="Shopping Cart"
+  tabindex="0"
 >
   <div class="z-50 w-full bg-black p-6 md:w-1/2 lg:w-1/3 relative">
     {#if loading}
-      <div class="absolute inset-0 bg-black/50 z-50" />
+      <div class="absolute inset-0 bg-black/50 z-50"></div>
     {/if}
     <div class="mb-6 flex w-full items-center justify-between">
       <div class="text-2xl font-medium">My Cart</div>
-      <button on:click class="text-sm uppercase opacity-80 hover:opacity-100">close</button>
+      <button on:click={closeCart} class="text-sm uppercase opacity-80 hover:opacity-100">close</button>
     </div>
     {#if items.length === 0}
       <div class="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
@@ -73,20 +92,19 @@
           />
           <div class="ml-4 flex w-full flex-col justify-between">
             <div class="flex w-full justify-between">
-              <di>
+              <div>
                 <p class="text-lg font-medium">{item.node.merchandise.product.title}</p>
                 <p class="text-sm">{item.node.merchandise.title}</p>
-              </di>
+              </div>
               <p class="font-medium">${item.node.estimatedCost.totalAmount.amount}</p>
             </div>
           </div>
         </div>
         <div class="mb-4 flex w-full">
           <button
-            on:click={() => {
-              removeEntireItem(item, i);
-            }}
+            on:click={() => removeEntireItem(item)}
             class="mr-2 flex h-8 w-8 items-center justify-center border border-white/40 bg-white/0 hover:bg-white/10"
+            aria-label="Remove item"
           >
             <Icons type="close" strokeColor="#fff" />
           </button>
@@ -95,18 +113,16 @@
               {item.node.quantity}
             </div>
             <button
-              on:click={() => {
-                removeOneItem(item, i);
-              }}
+              on:click={() => removeOneItem(item)}
               class="ml-auto flex h-8 w-8 items-center justify-center border-l border-white/40 bg-white/0 hover:bg-white/10"
+              aria-label="Decrease quantity"
             >
               <Icons type="minus" strokeColor="#fff" />
             </button>
             <button
-              on:click={() => {
-                addOneItem(item, i);
-              }}
+              on:click={() => addOneItem(item)}
               class="flex h-8 w-8 items-center justify-center border-l border-white/40 bg-white/0 hover:bg-white/10"
+              aria-label="Increase quantity"
             >
               <Icons type="plus" strokeColor="#fff" />
             </button>
@@ -122,10 +138,10 @@
         <span>Proceed to Checkout</span>
         {#if loading}
           <div class="lds-ring ml-4">
-            <div />
-            <div />
-            <div />
-            <div />
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
           </div>
         {/if}
       </button>

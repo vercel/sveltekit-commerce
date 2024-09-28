@@ -2,14 +2,14 @@
   import Icons from '$components/Icons.svelte';
   import { fade } from 'svelte/transition';
 
-  export let title;
-  export let description;
+  /** @type {{title: any, description: any}} */
+  let { title, description } = $props();
 
-  let toggle = false;
+  let toggle = $state(false);
 </script>
 
 <button
-  on:click={() => {
+  onclick={() => {
     toggle = !toggle;
   }}
   class="flex w-full border-b border-white/50 py-4 text-sm "

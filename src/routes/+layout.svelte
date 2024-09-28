@@ -6,11 +6,13 @@
   import { getCartItems } from '../store';
   import { onMount } from 'svelte';
   import { createCart } from '$utils/shopify';
+  /** @type {{children?: import('svelte').Snippet}} */
+  let { children } = $props();
 
   let cartId;
   let checkoutUrl;
   let cartCreatedAt;
-  let cartItems = [];
+  let cartItems = $state([]);
 
   onMount(async () => {
     if (typeof window !== 'undefined') {
@@ -53,8 +55,8 @@
     cartItems = res?.body?.data?.cart?.lines?.edges;
   }
 
-  let showCart = false;
-  let loading = false;
+  let showCart = $state(false);
+  let loading = $state(false);
 
   async function openCart() {
     await loadCart();
@@ -110,7 +112,7 @@
   {/if}
   <Header on:openCart={openCart} />
   <div class="min-h-screen overflow-scroll">
-    <slot />
+    {@render children?.()}
     <Footer />
   </div>
 </main>

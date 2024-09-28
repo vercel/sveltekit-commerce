@@ -8,7 +8,7 @@
       <div class="flex flex-none items-center justify-center rounded-full bg-white p-4">
         <Icons type="search" width="30px" height="30px" />
       </div>
-      <div class="mx-6 h-20 w-px bg-white" />
+      <div class="mx-6 h-20 w-px bg-white"></div>
       <div class="text-lg font-medium">Oops! The page you're looking for doesn't exist.</div>
     </div>
     <a
