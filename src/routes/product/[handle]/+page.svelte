@@ -4,7 +4,7 @@
   import Icons from '$components/Icons.svelte';
   import { getCartItems } from '../../../store.js';
 
-  /** @type {import('./$types').PageData} */
+  /** @type {{data: import('./$types').PageData}} */
   export let data;
 
   let selectedOptions = {};
@@ -13,9 +13,13 @@
 
   $: highlightedImageSrc = data?.body?.product?.images?.edges[currentImageIndex]?.node?.originalSrc;
 
-  data?.body?.product?.options.forEach((option) => {
-    selectedOptions = { ...selectedOptions, [option.name]: option.values[0] };
-  });
+  $: {
+    if (data?.body?.product?.options) {
+      data.body.product.options.forEach((option) => {
+        selectedOptions = { ...selectedOptions, [option.name]: option.values[0] };
+      });
+    }
+  }
 
   function changeHighlightedImage(direction) {
     if (direction === 'next') {
@@ -60,6 +64,13 @@
 
     cartLoading = false;
   }
+
+  function handleKeyDown(event, action) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      action();
+    }
+  }
 </script>
 
 <svelte:head>
@@ -81,32 +92,34 @@
             {#if data.body.product?.images?.edges.length > 1}
               <div class="absolute right-0 bottom-0 z-40 p-6 ">
                 <button
-                  on:click={() => {
-                    changeHighlightedImage('back');
-                  }}
+                  on:click={() => changeHighlightedImage('back')}
                   class="border border-b border-t border-l border-black py-4 px-8"
-                  ><Icons type="arrowLeft" /></button
+                  aria-label="Previous image"
                 >
+                  <Icons type="arrowLeft" />
+                </button>
                 <button
-                  on:click={() => {
-                    changeHighlightedImage('next');
-                  }}
-                  class="-ml-1 border border-black py-4 px-8"><Icons type="arrowRight" /></button
+                  on:click={() => changeHighlightedImage('next')}
+                  class="-ml-1 border border-black py-4 px-8"
+                  aria-label="Next image"
                 >
+                  <Icons type="arrowRight" />
+                </button>
               </div>
             {/if}
           </div>
         {/key}
         <div class="flex h-1/5 ">
           {#each data.body.product.images.edges as variant, i}
-            <div
+            <button
               on:click={() => {
                 currentImageIndex = i;
               }}
               class="h-full w-1/4 bg-white"
+              aria-label={`View image ${i + 1}`}
             >
               <GridTile imageSrc={variant.node.originalSrc} removeLabels={true} />
-            </div>
+            </button>
           {/each}
         </div>
       </div>
@@ -158,10 +171,10 @@
           <span>Add To Cart</span>
           {#if cartLoading}
             <div class="lds-ring ml-4">
-              <div />
-              <div />
-              <div />
-              <div />
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
             </div>
           {/if}
         </button>
@@ -178,7 +191,7 @@
     <div class="px-4 py-8">
       <div class="mb-4 text-3xl font-bold">Related Products</div>
       <ul class="grid grid-flow-row grid-cols-2 gap-4 md:grid-cols-4">
-        {#each data.body.featuredProducts as product, i (product.node.id)}
+        {#each data.body.featuredProducts as product (product.node.id)}
           <li>
             <div
               class="group relative block aspect-square overflow-hidden border border-white/20 bg-zinc-800/50"

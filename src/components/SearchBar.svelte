@@ -3,18 +3,19 @@
   import { goto } from '$app/navigation';
   import Icons from './Icons.svelte';
 
-  let value = $page.url.searchParams.get('q');
+  let value = $page.url.searchParams.get('q') || '';
 
   async function submit(e) {
+    e.preventDefault();
     let query = new URLSearchParams();
     if (value) {
       query.set('q', value);
     }
-    await goto(`/search${query ? `?${query}` : ''}`, { keepFocus: true });
+    await goto(`/search${query.toString() ? `?${query}` : ''}`, { keepFocus: true });
   }
 </script>
 
-<form on:submit|preventDefault={submit} class="relative flex w-full items-center">
+<form on:submit={submit} class="relative flex w-full items-center">
   <div class="absolute top-0 right-0 mr-2">
     <Icons strokeColor="#fff" type="search" />
   </div>

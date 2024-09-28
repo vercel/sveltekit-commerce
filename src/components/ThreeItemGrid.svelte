@@ -1,7 +1,8 @@
 <script>
   import GridTile from '$components/GridTile.svelte';
 
-  export let products;
+  /** @type {{products: any}} */
+  let { products } = $props();
 </script>
 
 <div class="flex flex-col lg:h-full lg:flex-row">
