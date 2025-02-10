@@ -5,21 +5,16 @@
   import { getCartItems } from '../../../store.js';
 
   /** @type {{data: import('./$types').PageData}} */
-  export let data;
+  let { data } = $props();
 
-  let selectedOptions = {};
-  let cartLoading = false;
-  let currentImageIndex = 0;
+  let selectedOptions = $state(data?.body?.product?.options? data.body.product.options.reduce((acc, option) => ({
+        ...acc,
+        [option.name]: option.values[0]
+      }), {}) :  {});
+  let cartLoading = $state(false);
+  let currentImageIndex = $state(0);
 
-  $: highlightedImageSrc = data?.body?.product?.images?.edges[currentImageIndex]?.node?.originalSrc;
-
-  $: {
-    if (data?.body?.product?.options) {
-      data.body.product.options.forEach((option) => {
-        selectedOptions = { ...selectedOptions, [option.name]: option.values[0] };
-      });
-    }
-  }
+  let highlightedImageSrc = $derived(data?.body?.product?.images?.edges[currentImageIndex]?.node?.originalSrc);
 
   function changeHighlightedImage(direction) {
     if (direction === 'next') {
@@ -64,13 +59,6 @@
 
     cartLoading = false;
   }
-
-  function handleKeyDown(event, action) {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      action();
-    }
-  }
 </script>
 
 <svelte:head>
@@ -80,7 +68,7 @@
 <div>
   {#if data.body.product}
     <div class="flex flex-col md:flex-row">
-      <div class="md:h-90 md:w-2/3">
+      <div class="md:w-2/3">
         {#key highlightedImageSrc}
           <div class="relative h-4/5 bg-light">
             <GridTile
@@ -92,14 +80,14 @@
             {#if data.body.product?.images?.edges.length > 1}
               <div class="absolute right-0 bottom-0 z-40 p-6 ">
                 <button
-                  on:click={() => changeHighlightedImage('back')}
+                  onclick={() => changeHighlightedImage('back')}
                   class="border border-b border-t border-l border-black py-4 px-8"
                   aria-label="Previous image"
                 >
                   <Icons type="arrowLeft" />
                 </button>
                 <button
-                  on:click={() => changeHighlightedImage('next')}
+                  onclick={() => changeHighlightedImage('next')}
                   class="-ml-1 border border-black py-4 px-8"
                   aria-label="Next image"
                 >
@@ -112,7 +100,7 @@
         <div class="flex h-1/5 ">
           {#each data.body.product.images.edges as variant, i}
             <button
-              on:click={() => {
+              onclick={() => {
                 currentImageIndex = i;
               }}
               class="h-full w-1/4 bg-white"
@@ -130,12 +118,12 @@
             <div class="flex">
               {#each option.values as value}
                 <button
-                  on:click={() => {
+                  onclick={() => {
                     selectedOptions = { ...selectedOptions, [option.name]: value };
                   }}
                   class={`${value.length <= 3 ? 'w-12' : 'px-2'} ${
                     selectedOptions[option.name] === value ? 'opacity-100' : 'opacity-60'
-                  } transition duration-300 ease-in-out hover:scale-110 hover:opacity-100 border-white h-12 mr-3 flex items-center justify-center rounded-full border`}
+                  } transition duration-300 ease-in-out hover:scale-110 hover:opacity-100 border-white h-12 mr-3 flex items-center justify-center rounded-full border cursor-pointer`}
                 >
                   {value}
                 </button>
@@ -165,8 +153,8 @@
           <div class="text-sm opacity-50">36 Reviews</div>
         </div>
         <button
-          on:click={addToCart}
-          class="mt-6 flex w-full items-center justify-center bg-light p-4 text-sm uppercase tracking-wide text-black opacity-90 hover:opacity-100"
+          onclick={addToCart}
+          class="mt-6 cursor-pointer flex w-full items-center justify-center bg-light p-4 text-sm uppercase tracking-wide text-black opacity-90 hover:opacity-100"
         >
           <span>Add To Cart</span>
           {#if cartLoading}

@@ -1,20 +1,15 @@
 <script>
-  import { run } from 'svelte/legacy';
-
   import GridTile from '$components/GridTile.svelte';
   import { page } from '$app/stores';
 
-  
   /** @type {{data: import('./$types').PageData}} */
   let { data } = $props();
-  let collection = $state();
-
-  run(() => {
-    data.body.collections.forEach((d) => {
+  let collection = $derived.by(() => {
+    for (const d of data.body.collections) {
       if (d.node.handle === $page?.params?.collection) {
-        collection = d.node;
+        return d.node;
       }
-    });
+    }
   });
 </script>
 

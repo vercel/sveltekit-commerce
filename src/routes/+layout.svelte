@@ -13,6 +13,8 @@
   let checkoutUrl;
   let cartCreatedAt;
   let cartItems = $state([]);
+  let showCart = $state(false);
+  let loading = $state(false);
 
   onMount(async () => {
     if (typeof window !== 'undefined') {
@@ -54,9 +56,6 @@
     const res = await getCartItems();
     cartItems = res?.body?.data?.cart?.lines?.edges;
   }
-
-  let showCart = $state(false);
-  let loading = $state(false);
 
   async function openCart() {
     await loadCart();
@@ -103,14 +102,30 @@
   {#if showCart}
     <ShoppingCart
       items={cartItems}
-      on:click={hideCart}
-      on:removeProduct={removeProduct}
-      on:addProduct={addToCart}
-      on:getCheckoutUrl={getCheckoutUrl}
+      onClose={hideCart}
+      onRemoveProduct={(variantId, quantity, lineId) => 
+        removeProduct({
+          detail: {
+            body: {
+              variantId,
+              quantity,
+              lineId
+            }
+          }
+        })
+      }
+      onAddProduct={(variantId) => 
+        addToCart({
+          detail: {
+            body: variantId
+          }
+        })
+      }
+      onCheckout={getCheckoutUrl}
       bind:loading
     />
   {/if}
-  <Header on:openCart={openCart} />
+  <Header {openCart} />
   <div class="min-h-screen overflow-scroll">
     {@render children?.()}
     <Footer />
