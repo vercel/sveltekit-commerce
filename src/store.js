@@ -1,5 +1,4 @@
 import { writable } from 'svelte/store';
-import { shopifyFetch } from './utils/shopify.js';
 import { loadCart } from '$utils/shopify';
 
 export const cartQuantity = writable('');

@@ -2,7 +2,7 @@
   import { page } from '$app/stores';
 
   /** @type {import('svelte').Snippet} */
-  export let children;
+  const { children } = $props();
 </script>
 
 <div class="flex">

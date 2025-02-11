@@ -1,20 +1,24 @@
 <script>
-  /** @type {string} */
-  export let title = '';
-  /** @type {boolean} */
-  export let removeLabels = false;
-  /** @type {string} */
-  export let imageSrc;
-  /** @type {string} */
-  export let price = '';
-  /** @type {string} */
-  export let currencyCode = '';
-  /** @type {string} */
-  export let href = '';
-  /** @type {string} */
-  export let priority = 'lazy';
+  /** @type {{
+    title?: string,
+    removeLabels?: boolean,
+    imageSrc: string,
+    price?: string,
+    currencyCode?: string,
+    href?: string,
+    priority?: string
+  }} */
+  let {
+    title = '',
+    removeLabels = false,
+    imageSrc,
+    price = '',
+    currencyCode = '',
+    href = '',
+    priority = 'lazy'
+  } = $props();
 
-  let hover = false;
+  let hover = $state(false);
 
   function handleMouseEnter() {
     hover = true;
@@ -26,8 +30,8 @@
 </script>
 
 <div
-  on:mouseenter={handleMouseEnter}
-  on:mouseleave={handleMouseLeave}
+  onmouseenter={handleMouseEnter}
+  onmouseleave={handleMouseLeave}
   class="h-full w-full overflow-hidden"
   role="img"
   aria-label={title}

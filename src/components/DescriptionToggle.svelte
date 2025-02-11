@@ -12,7 +12,7 @@
   onclick={() => {
     toggle = !toggle;
   }}
-  class="flex w-full border-b border-white/50 py-4 text-sm "
+  class="flex w-full cursor-pointer border-b border-white/50 py-4 text-sm "
 >
   <div class={`opacity-50 h-6 w-6 rotate ${toggle ? 'down' : ''}`}>
     <Icons type="caretRight" strokeColor="#fff" />

@@ -1,41 +1,43 @@
 <script>
   import Icons from './Icons.svelte';
-  import { createEventDispatcher } from 'svelte';
 
-  const dispatch = createEventDispatcher();
-
-  /** @type {{loading?: boolean, items?: any[]}} */
-  export let loading = false;
-  export let items = [];
+  /** @type {{
+    loading?: boolean,
+    items?: any[],
+    onAddProduct: (item: any) => void,
+    onRemoveProduct: (item: any, quantity: number, lineId: string) => void,
+    onClose: () => void
+  }} */
+  let { 
+    loading = $bindable(false), 
+    items = [], 
+    onAddProduct, 
+    onRemoveProduct, 
+    onClose 
+  } = $props();
 
   function addOneItem(item) {
     loading = true;
-    dispatch('addProduct', {
-      body: item.node.merchandise.id
-    });
+    onAddProduct(item.node.merchandise.id);
   }
 
   function removeOneItem(item) {
     loading = true;
     let quantity = item.node.quantity - 1;
-    dispatch('removeProduct', {
-      body: {
-        variantId: item.node.merchandise.id,
-        quantity: quantity,
-        lineId: item.node.id
-      }
-    });
+    onRemoveProduct(
+      item.node.merchandise.id,
+      quantity,
+      item.node.id
+    );
   }
 
   function removeEntireItem(item) {
     loading = true;
-    dispatch('removeProduct', {
-      body: {
-        variantId: item.node.merchandise.id,
-        quantity: 0,
-        lineId: item.node.id
-      }
-    });
+    onRemoveProduct(
+      item.node.merchandise.id,
+      0,
+      item.node.id
+    );
   }
 
   async function checkout() {
@@ -46,7 +48,7 @@
   }
 
   function closeCart() {
-    dispatch('close');
+    onClose();
   }
 
   function handleKeyDown(event) {
@@ -58,8 +60,8 @@
 
 <div
   class="absolute inset-0 z-50 flex max-h-screen w-full justify-end overflow-hidden bg-black/50"
-  on:click|self={closeCart}
-  on:keydown={handleKeyDown}
+  onclick={closeCart}
+  onkeydown={handleKeyDown}
   role="dialog"
   aria-label="Shopping Cart"
   tabindex="0"
@@ -70,7 +72,7 @@
     {/if}
     <div class="mb-6 flex w-full items-center justify-between">
       <div class="text-2xl font-medium">My Cart</div>
-      <button on:click={closeCart} class="text-sm uppercase opacity-80 hover:opacity-100">close</button>
+      <button onclick={closeCart} class="text-sm uppercase opacity-80 hover:opacity-100">close</button>
     </div>
     {#if items.length === 0}
       <div class="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
@@ -102,7 +104,7 @@
         </div>
         <div class="mb-4 flex w-full">
           <button
-            on:click={() => removeEntireItem(item)}
+            onclick={() => removeEntireItem(item)}
             class="mr-2 flex h-8 w-8 items-center justify-center border border-white/40 bg-white/0 hover:bg-white/10"
             aria-label="Remove item"
           >
@@ -113,14 +115,14 @@
               {item.node.quantity}
             </div>
             <button
-              on:click={() => removeOneItem(item)}
+              onclick={() => removeOneItem(item)}
               class="ml-auto flex h-8 w-8 items-center justify-center border-l border-white/40 bg-white/0 hover:bg-white/10"
               aria-label="Decrease quantity"
             >
               <Icons type="minus" strokeColor="#fff" />
             </button>
             <button
-              on:click={() => addOneItem(item)}
+              onclick={() => addOneItem(item)}
               class="flex h-8 w-8 items-center justify-center border-l border-white/40 bg-white/0 hover:bg-white/10"
               aria-label="Increase quantity"
             >
@@ -132,7 +134,7 @@
     </div>
     {#if items.length !== 0}
       <button
-        on:click={checkout}
+        onclick={checkout}
         class="mt-6 flex w-full items-center justify-center bg-white p-3 text-sm font-medium uppercase text-black opacity-90 hover:opacity-100"
       >
         <span>Proceed to Checkout</span>
